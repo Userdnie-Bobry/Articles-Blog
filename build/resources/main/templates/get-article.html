@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}"></title>
+<body>
+
+<div>
+    <h1>Статья</h1>
+    <p>Автор: <span th:text="${article.author}"></span></p>
+    <p>Название: <span th:text="${article.title}"></span></p>
+    <p>Текст статьи: <span th:text="${article.description}"></span></p>
+    <p>Дата создания: <span th:text="${article.dateCreate}"></span></p>
+    <p>Дата изменения: <span th:text="${article.dateChange}"></span></p>
+</div>
+
+</body>
+</html>
