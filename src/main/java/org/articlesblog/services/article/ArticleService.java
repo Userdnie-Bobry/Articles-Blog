@@ -1,4 +1,4 @@
-package org.articlesblog.services;
+package org.articlesblog.services.article;
 
 import org.articlesblog.dto.ArticleDTO;
 

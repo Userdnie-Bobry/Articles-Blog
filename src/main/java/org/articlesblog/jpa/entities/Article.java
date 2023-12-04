@@ -22,6 +22,9 @@ public class Article {
     @Column(name = "author", length = 250)
     private String author;
 
+    @Column(name = "label", length = 250)
+    private String label;
+
     @Column(name = "date_create", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dateCreate;
@@ -30,4 +33,3 @@ public class Article {
     @Temporal(TemporalType.DATE)
     private Date dateChange;
 }
-

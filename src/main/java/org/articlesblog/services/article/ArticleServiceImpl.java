@@ -1,4 +1,4 @@
-package org.articlesblog.services;
+package org.articlesblog.services.article;
 
 import lombok.RequiredArgsConstructor;
 import org.articlesblog.dto.ArticleDTO;
@@ -23,7 +23,7 @@ public class ArticleServiceImpl implements ArticleService{
                 .map(article -> {
                     String dateChange = article.getDateChange() != null ? article.getDateChange().toString() : "-";
                     return new ArticleDTO(article.getId(), article.getTitle(), article.getDescription(),
-                            article.getAuthor(), article.getDateCreate().toString(), dateChange);
+                            article.getAuthor(),  article.getLabel(), article.getDateCreate().toString(), dateChange);
                 })
                 .orElse(null);
     }
@@ -40,6 +40,7 @@ public class ArticleServiceImpl implements ArticleService{
                     article.getTitle(),
                     article.getDescription(),
                     article.getAuthor(),
+                    article.getLabel(),
                     article.getDateCreate().toString(),
                     dateChange
             );
@@ -55,12 +56,13 @@ public class ArticleServiceImpl implements ArticleService{
         article.setTitle(articleDTO.getTitle());
         article.setDescription(articleDTO.getDescription());
         article.setAuthor(articleDTO.getAuthor());
+        article.setLabel(articleDTO.getLabel());
         article.setDateCreate(new Date());
         article.setDateChange(null);
 
         Article savedArticle = articleRepository.save(article);
         return new ArticleDTO(savedArticle.getId(), savedArticle.getTitle(), savedArticle.getDescription(),
-                savedArticle.getAuthor(), savedArticle.getDateCreate().toString(), null);
+                savedArticle.getAuthor(), article.getLabel(), savedArticle.getDateCreate().toString(), null);
     }
 
     @Transactional
@@ -71,13 +73,14 @@ public class ArticleServiceImpl implements ArticleService{
                     existingArticle.setTitle(articleDTO.getTitle());
                     existingArticle.setDescription(articleDTO.getDescription());
                     existingArticle.setAuthor(articleDTO.getAuthor());
+                    existingArticle.setLabel(articleDTO.getLabel());
                     existingArticle.setDateChange(new Date());
                     return articleRepository.save(existingArticle);
                 })
                 .orElseThrow(() -> new RuntimeException("Article not found with id: " + id));
 
         return new ArticleDTO(article.getId(), article.getTitle(), article.getDescription(),
-                article.getAuthor(), article.getDateCreate().toString(), article.getDateChange().toString());
+                article.getAuthor(), article.getLabel(), article.getDateCreate().toString(), article.getDateChange().toString());
     }
 
     @Transactional

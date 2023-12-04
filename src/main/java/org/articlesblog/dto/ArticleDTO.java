@@ -14,6 +14,7 @@ public class ArticleDTO{
     String title;
     String description;
     String author;
+    String label;
     String dateCreate;
     String dateChange;
 }
