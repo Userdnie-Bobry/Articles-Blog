@@ -27,11 +27,12 @@ public class MainPageController {
         return "articles";
     }
 
+    //FIXME: в мейне этого метода не должно быть, либо в UserController, либо в AuthController
     @GetMapping("/auth")
     @Operation(summary = "Страница входа")
     public String auth(Model model){
         model.addAttribute("title", "Авторизация");
-        return "auth";
+        return "login";
     }
 
     @GetMapping("/about")

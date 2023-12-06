@@ -22,15 +22,15 @@
 <header th:insert="blocks/header.html :: header"></header>
 
 <main class="form-signin w-25 m-auto" >
-    <form>
+    <form th:action="@{/auth}" method="post">
         <h1 class="h3 mb-3 fw-normal">Войти в Блог</h1>
 
         <div class="form-floating">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <input name="username" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
             <label for="floatingInput">Адрес почты</label>
         </div>
         <div class="form-floating">
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <input name="password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
             <label for="floatingPassword">Пароль</label>
         </div>
 
@@ -38,7 +38,7 @@
             <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
             <label class="form-check-label" for="flexCheckDefault">Запомнить меня</label>
         </div>
-        <button class="btn btn-primary w-100 py-2" type="submit">Войти</button>
+        <button class="btn btn-primary w-100 py-2" type="submit" value="Sig In">Войти</button>
     </form>
 </main>
 
