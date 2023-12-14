@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.articlesblog.dto.ArticleDTO;
 import org.articlesblog.services.ArticleService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ public class MainPageController {
     private final ArticleService articleService;
 
     @GetMapping("/")
+    @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Получение всех статей")
     public String getAllArticles(Model model) {
         List<ArticleDTO> articles = articleService.getAllArticles();
@@ -36,6 +38,7 @@ public class MainPageController {
     }
 
     @GetMapping("/about")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "О нас")
     public String about(Model model){
         model.addAttribute("title", "О нас");
