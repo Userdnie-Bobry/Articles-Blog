@@ -53,10 +53,10 @@
                         <p class="card-text" th:text="${article.description}"></p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
-                                <a th:href="@{/get/article/{id}(id=${article.id})}">
+                                <a th:href="@{/articles/{id}(id=${article.id})}">
                                     <button type="button" class="btn btn-sm btn-outline-secondary">Просмотр</button>
                                 </a>
-                                <a th:href="@{/edit/article/{id}(id=${article.id})}">
+                                <a th:href="@{/articles/edit/{id}(id=${article.id})}">
                                     <button type="button" class="btn btn-sm btn-outline-secondary">Редактирование
                                     </button>
                                 </a>
@@ -73,5 +73,4 @@
 <footer th:insert="~{blocks/footer.html :: footer}"></footer>
 
 </body>
-
 </html>

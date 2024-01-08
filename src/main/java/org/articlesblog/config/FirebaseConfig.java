@@ -11,13 +11,13 @@ import java.io.IOException;
 
 @Configuration
 public class FirebaseConfig {
-    @Bean
-    public FirebaseApp firebaseApp() throws IOException {
-        FileInputStream serviceAccount = new FileInputStream("C:\\Users\\dayof\\IdeaProjects\\articlesBlog\\src\\main\\resources\\articles-blog-4e455-firebase-adminsdk-i5atk-6cfc9f06e2.json");
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .build();
-        return FirebaseApp.initializeApp(options);
-    }
+//    @Bean
+//    public FirebaseApp firebaseApp() throws IOException {
+//        FileInputStream serviceAccount = new FileInputStream("C:\\Users\\dayof\\IdeaProjects\\articlesBlog\\src\\main\\resources\\articles-blog-4e455-firebase-adminsdk-i5atk-6cfc9f06e2.json");
+//        FirebaseOptions options = new FirebaseOptions.Builder()
+//                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+//                .build();
+//        return FirebaseApp.initializeApp(options);
+//    }
 }
 

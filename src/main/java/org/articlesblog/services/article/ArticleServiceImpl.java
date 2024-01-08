@@ -2,8 +2,8 @@ package org.articlesblog.services.article;
 
 import lombok.RequiredArgsConstructor;
 import org.articlesblog.dto.ArticleDTO;
-import org.articlesblog.jpa.entities.Article;
-import org.articlesblog.jpa.repositories.ArticleRepository;
+import org.articlesblog.jpa.entity.Article;
+import org.articlesblog.jpa.repository.ArticleRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +34,7 @@ public class ArticleServiceImpl implements ArticleService{
         List<ArticleDTO> articleDTOs = new ArrayList<>();
         for (Article article : articles) {
             Optional<Date> dateChangeOptional = Optional.ofNullable(article.getDateChange());
-            String dateChange = dateChangeOptional.map(Date::toString).orElse("");
+            String dateChange = dateChangeOptional.map(Date::toString).orElse("-");
             ArticleDTO articleDTO = new ArticleDTO(
                     article.getId(),
                     article.getTitle(),
@@ -77,7 +77,7 @@ public class ArticleServiceImpl implements ArticleService{
                     existingArticle.setDateChange(new Date());
                     return articleRepository.save(existingArticle);
                 })
-                .orElseThrow(() -> new RuntimeException("Article not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Статья с id " + id + " не найдена."));
 
         return new ArticleDTO(article.getId(), article.getTitle(), article.getDescription(),
                 article.getAuthor(), article.getLabel(), article.getDateCreate().toString(), article.getDateChange().toString());
@@ -85,10 +85,11 @@ public class ArticleServiceImpl implements ArticleService{
 
     @Transactional
     @Override
-    public void deleteArticle(Integer id) {
-        Article article = articleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Article not found with id: " + id));
-
-        articleRepository.delete(article);
+    public String deleteArticle(Integer id) {
+        Optional<Article> articleOptional = articleRepository.findById(id);
+        return articleOptional.map(article -> {
+            articleRepository.deleteById(id);
+            return "Статья " + id + " удалена";
+        }).orElse("Неудачное удаление статьи");
     }
 }

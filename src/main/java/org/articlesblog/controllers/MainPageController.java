@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.articlesblog.dto.ArticleDTO;
 import org.articlesblog.services.article.ArticleService;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Tag(name = "Main page")
 @Slf4j
 @RequiredArgsConstructor
-@org.springframework.stereotype.Controller
+@Controller
 public class MainPageController {
     private final ArticleService articleService;
 

@@ -1,4 +1,4 @@
-package org.articlesblog.jpa.entities;
+package org.articlesblog.jpa.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

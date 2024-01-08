@@ -9,5 +9,5 @@ public interface ArticleService {
     List<ArticleDTO> getAllArticles();
     ArticleDTO createArticle(ArticleDTO articleDTO);
     ArticleDTO updateArticle(Integer id, ArticleDTO articleDTO);
-    void deleteArticle(Integer id);
+    String deleteArticle(Integer id);
 }

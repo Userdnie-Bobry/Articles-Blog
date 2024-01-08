@@ -1,6 +1,6 @@
-package org.articlesblog.jpa.repositories;
+package org.articlesblog.jpa.repository;
 
-import org.articlesblog.jpa.entities.Article;
+import org.articlesblog.jpa.entity.Article;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
