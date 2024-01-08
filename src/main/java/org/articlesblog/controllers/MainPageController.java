@@ -53,4 +53,15 @@ public class MainPageController {
         model.addAttribute("title", "О нас");
         return "about";
     }
+
+    @GetMapping("/articles/search")
+    public String searchArticles(@RequestParam("searchText") String searchText, Model model) {
+        if (searchText.isEmpty()) {
+            return "redirect:/articles/page/1";
+        }
+
+        List<ArticleDTO> articles = articleService.searchArticles(searchText);
+        model.addAttribute("articles", articles);
+        return "articles";
+    }
 }

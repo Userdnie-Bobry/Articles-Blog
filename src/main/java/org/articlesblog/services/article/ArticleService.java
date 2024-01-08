@@ -10,4 +10,5 @@ public interface ArticleService {
     ArticleDTO createArticle(ArticleDTO articleDTO);
     ArticleDTO updateArticle(Integer id, ArticleDTO articleDTO);
     String deleteArticle(Integer id);
+    List<ArticleDTO> searchArticles(String searchText);
 }

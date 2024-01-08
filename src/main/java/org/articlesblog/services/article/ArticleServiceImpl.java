@@ -1,5 +1,6 @@
 package org.articlesblog.services.article;
 
+import com.google.firebase.database.annotations.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.articlesblog.dto.ArticleDTO;
 import org.articlesblog.jpa.entity.Article;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -31,22 +33,7 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
     public List<ArticleDTO> getAllArticles() {
         List<Article> articles = articleRepository.findAll();
-        List<ArticleDTO> articleDTOs = new ArrayList<>();
-        for (Article article : articles) {
-            Optional<Date> dateChangeOptional = Optional.ofNullable(article.getDateChange());
-            String dateChange = dateChangeOptional.map(Date::toString).orElse("-");
-            ArticleDTO articleDTO = new ArticleDTO(
-                    article.getId(),
-                    article.getTitle(),
-                    article.getDescription(),
-                    article.getAuthor(),
-                    article.getLabel(),
-                    article.getDateCreate().toString(),
-                    dateChange
-            );
-            articleDTOs.add(0, articleDTO);
-        }
-        return articleDTOs;
+        return getArticleDTOS(articles);
     }
 
     @Transactional
@@ -92,4 +79,40 @@ public class ArticleServiceImpl implements ArticleService{
             return "Статья " + id + " удалена";
         }).orElse("Неудачное удаление статьи");
     }
+
+    @Override
+    public List<ArticleDTO> searchArticles(String searchText) {
+        String searchTextIgnoreCase = searchText.toLowerCase();
+
+        List<Article> articles = new ArrayList<>();
+        articles.addAll(articleRepository.findAllByTitleContainingIgnoreCase(searchTextIgnoreCase));
+        articles.addAll(articleRepository.findAllByDescriptionContainingIgnoreCase(searchTextIgnoreCase));
+        articles.addAll(articleRepository.findAllByAuthorContainingIgnoreCase(searchTextIgnoreCase));
+        articles.addAll(articleRepository.findAllByLabelContainingIgnoreCase(searchTextIgnoreCase));
+
+        articles = articles.stream().distinct().collect(Collectors.toList());
+
+        return getArticleDTOS(articles);
+    }
+
+    @NotNull
+    private List<ArticleDTO> getArticleDTOS(List<Article> articles) {
+        List<ArticleDTO> articleDTOs = new ArrayList<>();
+        for (Article article : articles) {
+            Optional<Date> dateChangeOptional = Optional.ofNullable(article.getDateChange());
+            String dateChange = dateChangeOptional.map(Date::toString).orElse("-");
+            ArticleDTO articleDTO = new ArticleDTO(
+                    article.getId(),
+                    article.getTitle(),
+                    article.getDescription(),
+                    article.getAuthor(),
+                    article.getLabel(),
+                    article.getDateCreate().toString(),
+                    dateChange
+            );
+            articleDTOs.add(0, articleDTO);
+        }
+        return articleDTOs;
+    }
+
 }
