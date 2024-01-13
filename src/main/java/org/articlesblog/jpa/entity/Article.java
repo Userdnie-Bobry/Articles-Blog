@@ -16,8 +16,11 @@ public class Article {
     @Column(name = "title", length = 250)
     private String title;
 
-    @Column(name = "description", columnDefinition = "text")
+    @Column(name = "description", length = 250)
     private String description;
+
+    @Column(name = "text", columnDefinition = "text")
+    private String text;
 
     @Column(name = "author", length = 250)
     private String author;

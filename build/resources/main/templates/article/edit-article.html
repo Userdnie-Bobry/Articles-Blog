@@ -54,8 +54,12 @@
             <input type="text" id="title" name="title" th:field="*{title}" required>
         </strong></p>
         <p><strong>
-            <label for="description">Текст статьи:</label>
+            <label for="description">Краткое описание:</label>
             <textarea id="description" name="description" required th:field="*{description}"></textarea>
+        </strong></p>
+        <p><strong>
+            <label for="text">Текст статьи:</label>
+            <textarea id="text" name="text" required th:field="*{text}"></textarea>
         </strong></p>
 
         <button type="button" onclick="submitForm()" class="my-custom-button">Обновить статью</button>
@@ -73,7 +77,8 @@
             label: formData.get('label'),
             author: formData.get('author'),
             title: formData.get('title'),
-            description: formData.get('description')
+            description: formData.get('description'),
+            text: formData.get('text')
         };
 
         fetch(form.action, {

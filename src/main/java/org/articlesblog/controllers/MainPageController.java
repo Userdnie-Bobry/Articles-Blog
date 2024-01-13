@@ -24,6 +24,12 @@ public class MainPageController {
     public String getArticlesByPage(@PathVariable Integer id, Model model) {
         int pageSize = 9;
         List<ArticleDTO> articles = articleService.getAllArticles();
+
+        if (articles.isEmpty()){
+            model.addAttribute("title", "Статей нет");
+            return "articles";
+        }
+
         int totalPages = (int) Math.ceil((double) articles.size() / pageSize);
         int startIndex = (id - 1) * pageSize;
         int endIndex = Math.min(startIndex + pageSize, articles.size());
@@ -37,6 +43,7 @@ public class MainPageController {
         model.addAttribute("title", "Страница " + id + " из " + totalPages);
         model.addAttribute("currentPage", id);
         model.addAttribute("totalPages", totalPages);
+
         return "articles";
     }
 

@@ -49,7 +49,7 @@
     <p><strong>Метка:</strong> <span th:text="${article.label}" class="underline"></span></p>
     <p><strong>Автор:</strong> <span th:text="${article.author}" class="underline"></span></p>
     <p><strong>Название:</strong> <span th:text="${article.title}" class="underline"></span></p>
-    <p><strong>Текст статьи:</strong> <span th:text="${article.description}" class="underline"></span></p>
+    <p><strong>Текст статьи:</strong> <span th:text="${article.text}" class="underline"></span></p>
 
     <form id="articleForm" th:action="@{/articles/delete/{id}(id=${article.id})}" method="POST" th:object="${article}">
         <button type="submit" class="my-custom-button">Удалить статью</button>

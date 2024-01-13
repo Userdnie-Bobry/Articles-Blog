@@ -8,6 +8,7 @@ import java.util.List;
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
     List<Article> findAllByTitleContainingIgnoreCase(String title);
     List<Article> findAllByDescriptionContainingIgnoreCase(String description);
+    List<Article> findAllByTextContainingIgnoreCase(String text);
     List<Article> findAllByAuthorContainingIgnoreCase(String author);
     List<Article> findAllByLabelContainingIgnoreCase(String label);
 }

@@ -24,7 +24,7 @@ public class ArticleServiceImpl implements ArticleService{
         return articleRepository.findById(id)
                 .map(article -> {
                     String dateChange = article.getDateChange() != null ? article.getDateChange().toString() : "-";
-                    return new ArticleDTO(article.getId(), article.getTitle(), article.getDescription(),
+                    return new ArticleDTO(article.getId(), article.getTitle(), article.getDescription(), article.getText(),
                             article.getAuthor(),  article.getLabel(), article.getDateCreate().toString(), dateChange);
                 })
                 .orElse(null);
@@ -44,11 +44,12 @@ public class ArticleServiceImpl implements ArticleService{
         article.setDescription(articleDTO.getDescription());
         article.setAuthor(articleDTO.getAuthor());
         article.setLabel(articleDTO.getLabel());
+        article.setText(articleDTO.getText());
         article.setDateCreate(new Date());
         article.setDateChange(null);
 
         Article savedArticle = articleRepository.save(article);
-        return new ArticleDTO(savedArticle.getId(), savedArticle.getTitle(), savedArticle.getDescription(),
+        return new ArticleDTO(savedArticle.getId(), savedArticle.getTitle(), savedArticle.getDescription(), savedArticle.getText(),
                 savedArticle.getAuthor(), article.getLabel(), savedArticle.getDateCreate().toString(), null);
     }
 
@@ -61,12 +62,13 @@ public class ArticleServiceImpl implements ArticleService{
                     existingArticle.setDescription(articleDTO.getDescription());
                     existingArticle.setAuthor(articleDTO.getAuthor());
                     existingArticle.setLabel(articleDTO.getLabel());
+                    existingArticle.setText(articleDTO.getText());
                     existingArticle.setDateChange(new Date());
                     return articleRepository.save(existingArticle);
                 })
                 .orElseThrow(() -> new RuntimeException("Статья с id " + id + " не найдена."));
 
-        return new ArticleDTO(article.getId(), article.getTitle(), article.getDescription(),
+        return new ArticleDTO(article.getId(), article.getTitle(), article.getDescription(), article.getText(),
                 article.getAuthor(), article.getLabel(), article.getDateCreate().toString(), article.getDateChange().toString());
     }
 
@@ -87,6 +89,7 @@ public class ArticleServiceImpl implements ArticleService{
         List<Article> articles = new ArrayList<>();
         articles.addAll(articleRepository.findAllByTitleContainingIgnoreCase(searchTextIgnoreCase));
         articles.addAll(articleRepository.findAllByDescriptionContainingIgnoreCase(searchTextIgnoreCase));
+        articles.addAll(articleRepository.findAllByTextContainingIgnoreCase(searchTextIgnoreCase));
         articles.addAll(articleRepository.findAllByAuthorContainingIgnoreCase(searchTextIgnoreCase));
         articles.addAll(articleRepository.findAllByLabelContainingIgnoreCase(searchTextIgnoreCase));
 
@@ -105,6 +108,7 @@ public class ArticleServiceImpl implements ArticleService{
                     article.getId(),
                     article.getTitle(),
                     article.getDescription(),
+                    article.getText(),
                     article.getAuthor(),
                     article.getLabel(),
                     article.getDateCreate().toString(),

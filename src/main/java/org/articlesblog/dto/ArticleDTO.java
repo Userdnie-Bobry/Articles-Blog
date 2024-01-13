@@ -13,6 +13,7 @@ public class ArticleDTO{
     int id;
     String title;
     String description;
+    String text;
     String author;
     String label;
     String dateCreate;
