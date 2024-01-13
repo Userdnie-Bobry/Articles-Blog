@@ -25,6 +25,9 @@ public class Article {
     @Column(name = "label", length = 250)
     private String label;
 
+    @Column(name = "image", length = 500)
+    private String image;
+
     @Column(name = "date_create", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dateCreate;

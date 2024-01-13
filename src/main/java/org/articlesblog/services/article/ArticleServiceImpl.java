@@ -2,9 +2,11 @@ package org.articlesblog.services.article;
 
 import com.google.firebase.database.annotations.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.articlesblog.dto.ArticleDTO;
+import org.articlesblog.dto.ArticleDTOInput;
+import org.articlesblog.dto.ArticleDTOOutput;
 import org.articlesblog.jpa.entity.Article;
 import org.articlesblog.jpa.repository.ArticleRepository;
+import org.articlesblog.services.firebase.FirebaseStorageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,57 +19,66 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class ArticleServiceImpl implements ArticleService{
+
     private final ArticleRepository articleRepository;
 
+    private final FirebaseStorageService firebaseStorageService;
+
     @Override
-    public ArticleDTO getArticle(Integer id) {
+    public ArticleDTOOutput getArticle(Integer id) {
         return articleRepository.findById(id)
                 .map(article -> {
                     String dateChange = article.getDateChange() != null ? article.getDateChange().toString() : "-";
-                    return new ArticleDTO(article.getId(), article.getTitle(), article.getDescription(),
-                            article.getAuthor(),  article.getLabel(), article.getDateCreate().toString(), dateChange);
+                    return new ArticleDTOOutput(article.getId(), article.getTitle(), article.getDescription(),
+                            article.getAuthor(),  article.getLabel(), article.getImage(), article.getDateCreate().toString(), dateChange);
                 })
                 .orElse(null);
     }
 
     @Override
-    public List<ArticleDTO> getAllArticles() {
+    public List<ArticleDTOOutput> getAllArticles() {
         List<Article> articles = articleRepository.findAll();
         return getArticleDTOS(articles);
     }
 
     @Transactional
     @Override
-    public ArticleDTO createArticle(ArticleDTO articleDTO) {
+    public ArticleDTOOutput createArticle(ArticleDTOInput articleDTOInput) {
+        String fileName = firebaseStorageService.uploadImage(articleDTOInput.getMultipartFile());
+
         Article article = new Article();
-        article.setTitle(articleDTO.getTitle());
-        article.setDescription(articleDTO.getDescription());
-        article.setAuthor(articleDTO.getAuthor());
-        article.setLabel(articleDTO.getLabel());
+        article.setTitle(articleDTOInput.getTitle());
+        article.setDescription(articleDTOInput.getDescription());
+        article.setAuthor(articleDTOInput.getAuthor());
+        article.setLabel(articleDTOInput.getLabel());
+        article.setImage(fileName);
         article.setDateCreate(new Date());
         article.setDateChange(null);
 
         Article savedArticle = articleRepository.save(article);
-        return new ArticleDTO(savedArticle.getId(), savedArticle.getTitle(), savedArticle.getDescription(),
-                savedArticle.getAuthor(), article.getLabel(), savedArticle.getDateCreate().toString(), null);
+        return new ArticleDTOOutput(savedArticle.getId(), savedArticle.getTitle(), savedArticle.getDescription(),
+                savedArticle.getAuthor(), article.getLabel(), article.getImage(), savedArticle.getDateCreate().toString(), null);
     }
 
     @Transactional
     @Override
-    public ArticleDTO updateArticle(Integer id, ArticleDTO articleDTO) {
+    public ArticleDTOOutput updateArticle(Integer id, ArticleDTOInput articleDTOInput) {
+        String fileName = firebaseStorageService.updateImage(id.toString(), articleDTOInput.getMultipartFile());
+
         Article article = articleRepository.findById(id)
                 .map(existingArticle -> {
-                    existingArticle.setTitle(articleDTO.getTitle());
-                    existingArticle.setDescription(articleDTO.getDescription());
-                    existingArticle.setAuthor(articleDTO.getAuthor());
-                    existingArticle.setLabel(articleDTO.getLabel());
+                    existingArticle.setTitle(articleDTOInput.getTitle());
+                    existingArticle.setDescription(articleDTOInput.getDescription());
+                    existingArticle.setAuthor(articleDTOInput.getAuthor());
+                    existingArticle.setLabel(articleDTOInput.getLabel());
+                    existingArticle.setImage(fileName);
                     existingArticle.setDateChange(new Date());
                     return articleRepository.save(existingArticle);
                 })
-                .orElseThrow(() -> new RuntimeException("Статья с id " + id + " не найдена."));
+                .orElseThrow(() -> new RuntimeException("Article not found with id: " + id));
 
-        return new ArticleDTO(article.getId(), article.getTitle(), article.getDescription(),
-                article.getAuthor(), article.getLabel(), article.getDateCreate().toString(), article.getDateChange().toString());
+        return new ArticleDTOOutput(article.getId(), article.getTitle(), article.getDescription(),
+                article.getAuthor(), article.getLabel(), article.getImage(), article.getDateCreate().toString(), article.getDateChange().toString());
     }
 
     @Transactional
@@ -81,7 +92,7 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     @Override
-    public List<ArticleDTO> searchArticles(String searchText) {
+    public List<ArticleDTOOutput> searchArticles(String searchText) {
         String searchTextIgnoreCase = searchText.toLowerCase();
 
         List<Article> articles = new ArrayList<>();
@@ -96,23 +107,24 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     @NotNull
-    private List<ArticleDTO> getArticleDTOS(List<Article> articles) {
-        List<ArticleDTO> articleDTOs = new ArrayList<>();
+    private List<ArticleDTOOutput> getArticleDTOS(List<Article> articles) {
+        List<ArticleDTOOutput> articleDTOOutputs = new ArrayList<>();
         for (Article article : articles) {
             Optional<Date> dateChangeOptional = Optional.ofNullable(article.getDateChange());
             String dateChange = dateChangeOptional.map(Date::toString).orElse("-");
-            ArticleDTO articleDTO = new ArticleDTO(
+            ArticleDTOOutput articleDTOOutput = new ArticleDTOOutput(
                     article.getId(),
                     article.getTitle(),
                     article.getDescription(),
                     article.getAuthor(),
                     article.getLabel(),
+                    article.getImage(),
                     article.getDateCreate().toString(),
                     dateChange
             );
-            articleDTOs.add(0, articleDTO);
+            articleDTOOutputs.add(0, articleDTOOutput);
         }
-        return articleDTOs;
+        return articleDTOOutputs;
     }
 
 }
