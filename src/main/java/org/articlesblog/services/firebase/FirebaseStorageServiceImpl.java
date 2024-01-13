@@ -5,6 +5,9 @@ import com.google.cloud.storage.*;
 
 import jakarta.annotation.PostConstruct;
 
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,14 +42,14 @@ public class FirebaseStorageServiceImpl implements FirebaseStorageService {
     @Override
     public String uploadImage(MultipartFile file) {
         try {
-            String fileName = UUID.randomUUID() + ".jpg";
+            String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
             Path path = Paths.get(fileName);
             Files.copy(file.getInputStream(), path);
 
-            /*Thumbnails.of(path.toFile())
+            Thumbnails.of(path.toFile())
                     .crop(Positions.CENTER)
                     .size(660,360)
-                    .toFile(path.toFile());*/
+                    .toFile(path.toFile());
 
             BlobId blobId = BlobId.of(BUCKET_NAME, fileName);
             BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.getContentType()).build();

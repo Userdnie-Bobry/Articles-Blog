@@ -63,10 +63,11 @@ public class ArticleServiceImpl implements ArticleService{
     @Transactional
     @Override
     public ArticleDTOOutput updateArticle(Integer id, ArticleDTOInput articleDTOInput) {
-        String fileName = firebaseStorageService.updateImage(id.toString(), articleDTOInput.getMultipartFile());
-
         Article article = articleRepository.findById(id)
                 .map(existingArticle -> {
+
+                    String fileName = firebaseStorageService.updateImage(existingArticle.getImage(), articleDTOInput.getMultipartFile());
+
                     existingArticle.setTitle(articleDTOInput.getTitle());
                     existingArticle.setDescription(articleDTOInput.getDescription());
                     existingArticle.setAuthor(articleDTOInput.getAuthor());
@@ -87,6 +88,7 @@ public class ArticleServiceImpl implements ArticleService{
         Optional<Article> articleOptional = articleRepository.findById(id);
         return articleOptional.map(article -> {
             articleRepository.deleteById(id);
+            firebaseStorageService.deleteImage(article.getImage());
             return "Статья " + id + " удалена";
         }).orElse("Неудачное удаление статьи");
     }

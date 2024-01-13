@@ -19,14 +19,14 @@ public class PostArticlesController {
 
     @PostMapping("/articles/new")
     @Operation(summary = "Создание новой статьи")
-    public String createArticle(@RequestParam ArticleDTOInput articleDTOInput) {
+    public String createArticle(@ModelAttribute ArticleDTOInput articleDTOInput) {
         articleService.createArticle(articleDTOInput);
         return "redirect:/articles/page/1";
     }
 
     @PostMapping("/articles/edit/{id}")
     @Operation(summary = "Обновление данных статьи по id")
-    public String updateArticle(@PathVariable Integer id, @RequestParam ArticleDTOInput articleDTOInput) {
+    public String updateArticle(@PathVariable Integer id, @ModelAttribute ArticleDTOInput articleDTOInput) {
         articleService.updateArticle(id, articleDTOInput);
         return "redirect:/articles/page/1";
     }

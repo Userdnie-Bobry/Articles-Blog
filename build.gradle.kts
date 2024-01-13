@@ -22,6 +22,7 @@ repositories {
 }
 
 dependencies {
+	implementation("net.coobird:thumbnailator:0.4.20")
 	implementation("com.google.firebase:firebase-admin:9.2.0")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.1.3")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
