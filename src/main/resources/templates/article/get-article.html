@@ -52,9 +52,17 @@
     <p><strong>Текст статьи:</strong> <span th:text="${article.text}" class="underline"></span></p>
 
     <form id="articleForm" th:action="@{/articles/delete/{id}(id=${article.id})}" method="POST" th:object="${article}">
-        <button type="submit" class="my-custom-button">Удалить статью</button>
+        <button type="button" onclick="confirmDelete()" class="my-custom-button">Удалить статью</button>
     </form>
 </div>
+
+<script>
+    function confirmDelete() {
+        if (confirm("Вы уверены, что хотите удалить эту статью?")) {
+            document.getElementById("articleForm").submit();
+        }
+    }
+</script>
 
 <footer th:insert="~{blocks/footer.html :: footer}"></footer>
 

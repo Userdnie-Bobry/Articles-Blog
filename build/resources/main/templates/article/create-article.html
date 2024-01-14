@@ -34,6 +34,14 @@
             color: aliceblue;
             font-size: 20px;
         }
+
+        #text {
+            resize: both;
+        }
+
+        #description {
+            resize: both;
+        }
     </style>
 </head>
 <body>
@@ -62,7 +70,7 @@
             <label for="text">Текст статьи:</label>
             <textarea id="text" name="text" required></textarea>
         </strong></p>
-        <button type="submit" onclick="submitForm()" class="my-custom-button">Создать статью</button>
+        <button type="button" onclick="submitForm()" class="my-custom-button">Создать статью</button>
     </form>
 </div>
 
@@ -79,8 +87,14 @@
         const xhr = new XMLHttpRequest();
         xhr.open('POST', '/articles/new');
         xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                window.location.href = "/articles/page/1";
+            } else {
+                console.error('Ошибка при создании статьи');
+            }
+        };
         xhr.send(JSON.stringify(json));
-        window.location.href = "/articles/page/1";
     }
 </script>
 

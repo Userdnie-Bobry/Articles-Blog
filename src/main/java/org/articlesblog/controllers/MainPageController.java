@@ -25,17 +25,12 @@ public class MainPageController {
         int pageSize = 9;
         List<ArticleDTO> articles = articleService.getAllArticles();
 
-        if (articles.isEmpty()){
-            model.addAttribute("title", "Статей нет");
-            return "articles";
-        }
-
         int totalPages = (int) Math.ceil((double) articles.size() / pageSize);
         int startIndex = (id - 1) * pageSize;
         int endIndex = Math.min(startIndex + pageSize, articles.size());
 
         if (id < 1 || id > totalPages) {
-            return "error";
+            return "articles";
         }
 
         List<ArticleDTO> articlesOnPage = articles.subList(startIndex, endIndex);
