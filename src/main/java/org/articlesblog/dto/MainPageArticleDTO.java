@@ -9,13 +9,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleDTO{
+public class MainPageArticleDTO {
     int id;
+    String label;
+    String author;
     String title;
     String description;
-    String text;
-    String author;
-    String label;
     String dateCreate;
-    String dateChange;
 }

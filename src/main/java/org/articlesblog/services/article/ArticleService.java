@@ -1,14 +1,15 @@
 package org.articlesblog.services.article;
 
-import org.articlesblog.dto.ArticleDTO;
+import org.articlesblog.dto.*;
 
 import java.util.List;
 
 public interface ArticleService {
-    ArticleDTO getArticle(Integer id);
-    List<ArticleDTO> getAllArticles();
-    ArticleDTO createArticle(ArticleDTO articleDTO);
-    ArticleDTO updateArticle(Integer id, ArticleDTO articleDTO);
-    String deleteArticle(Integer id);
-    List<ArticleDTO> searchArticles(String searchText);
+    GetArticleDTO getArticle(Integer id);
+    EditArticleDTO getToEditArticle(Integer id);
+    List<MainPageArticleDTO> getAllArticles();
+    void createArticle(EditArticleDTO articleDTO);
+    void updateArticle(Integer id, EditArticleDTO articleDTO);
+    void deleteArticle(Integer id);
+    List<SearchArticleDTO> searchArticles(String searchText);
 }

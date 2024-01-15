@@ -3,7 +3,7 @@ package org.articlesblog.jpa.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "articles")
@@ -28,11 +28,9 @@ public class Article {
     @Column(name = "label", length = 250)
     private String label;
 
-    @Column(name = "date_create", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date dateCreate;
+    @Column(name = "date_create", nullable = false, columnDefinition = "timestamp with time zone")
+    private LocalDateTime dateCreate;
 
-    @Column(name = "date_change")
-    @Temporal(TemporalType.DATE)
-    private Date dateChange;
+    @Column(name = "date_change", columnDefinition = "timestamp with time zone")
+    private LocalDateTime dateChange;
 }

@@ -4,7 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.articlesblog.dto.ArticleDTO;
+import org.articlesblog.dto.MainPageArticleDTO;
+import org.articlesblog.dto.SearchArticleDTO;
 import org.articlesblog.services.article.ArticleService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,11 +20,17 @@ import java.util.List;
 public class MainPageController {
     private final ArticleService articleService;
 
+    @GetMapping("/")
+    @Operation(summary = "Стартовая страница")
+    public String infiniteArticles(){
+        return "redirect:/articles/page/1";
+    }
+
     @GetMapping("/articles/page/{id}")
     @Operation(summary = "Получение статей по страницам")
     public String getArticlesByPage(@PathVariable Integer id, Model model) {
         int pageSize = 9;
-        List<ArticleDTO> articles = articleService.getAllArticles();
+        List<MainPageArticleDTO> articles = articleService.getAllArticles();
 
         int totalPages = (int) Math.ceil((double) articles.size() / pageSize);
         int startIndex = (id - 1) * pageSize;
@@ -33,7 +40,7 @@ public class MainPageController {
             return "articles";
         }
 
-        List<ArticleDTO> articlesOnPage = articles.subList(startIndex, endIndex);
+        List<MainPageArticleDTO> articlesOnPage = articles.subList(startIndex, endIndex);
         model.addAttribute("articles", articlesOnPage);
         model.addAttribute("title", "Страница " + id + " из " + totalPages);
         model.addAttribute("currentPage", id);
@@ -62,7 +69,7 @@ public class MainPageController {
             return "redirect:/articles/page/1";
         }
 
-        List<ArticleDTO> articles = articleService.searchArticles(searchText);
+        List<SearchArticleDTO> articles = articleService.searchArticles(searchText);
         model.addAttribute("articles", articles);
         return "articles";
     }
