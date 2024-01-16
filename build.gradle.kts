@@ -22,8 +22,12 @@ repositories {
 }
 
 dependencies {
+	implementation("org.springframework.boot:spring-boot-docker-compose")
+	implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
+
 	implementation("com.google.firebase:firebase-admin:9.2.0")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.1.3")
+
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
