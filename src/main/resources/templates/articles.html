@@ -34,12 +34,12 @@
 
 <body>
 
-<header th:insert="blocks/header.html :: header"></header>
+<header th:insert="~{blocks/header.html :: header}"></header>
 
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            <div th:each="article : ${articles}" class="col">
+            <div th:each="article, iterStat : ${articles}" class="col">
                 <div class="card shadow-sm">
                     <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
                          xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
@@ -48,14 +48,18 @@
                         <text x="50%" y="50%" fill="#eceeef" dy=".3em">img</text>
                     </svg>
                     <div class="card-body">
+                        <div class="card-text">
+                            <strong th:text="${article.label}"></strong>
+                        </div>
+                        <div class="card-text" th:text="${article.author}"></div>
                         <h5 class="card-title" th:text="${article.title}"></h5>
                         <p class="card-text" th:text="${article.description}"></p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
-                                <a th:href="@{/get/article/{id}(id=${article.id})}">
+                                <a th:href="@{/articles/{id}(id=${article.id})}">
                                     <button type="button" class="btn btn-sm btn-outline-secondary">Просмотр</button>
                                 </a>
-                                <a th:href="@{/edit/article/{id}(id=${article.id})}">
+                                <a th:href="@{/articles/edit/{id}(id=${article.id})}">
                                     <button type="button" class="btn btn-sm btn-outline-secondary">Редактирование</button>
                                 </a>
                             </div>
@@ -68,8 +72,7 @@
     </div>
 </div>
 
-<footer th:insert="blocks/footer.html :: footer"></footer>
+<footer th:insert="~{blocks/footer.html :: footer}"></footer>
 
 </body>
-
 </html>

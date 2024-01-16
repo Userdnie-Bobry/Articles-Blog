@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}"></title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <script src="/docs/5.3/assets/js/color-modes.js"></script>
+
+    <title th:text="${title}"></title>
+
+    <style>
+        @media (min-width: 768px) {
+        }
+
+        .navbar-nav > li > a {
+            padding: 15px;
+        }
+
+        .my-custom-button {
+            background-color: darkred;
+            color: aliceblue;
+            font-size: 20px;
+        }
+
+        footer {
+            transform: translate(0, 22px);
+            padding: 30px;
+        }
+
+        .article-description {
+            margin-top: 50px;
+            margin-bottom: 50px;
+            margin-inline-start: 50px;
+            margin-inline-end: 50px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<header th:insert="~{blocks/header.html :: header}"></header>
+
+<div class="py-5 article-description">
+    <p><strong>Дата создания:</strong> <span th:text="${article.dateCreate}" class="underline"></span></p>
+    <p><strong>Дата изменения:</strong> <span th:text="${article.dateChange}" class="underline"></span></p>
+    <p><strong>Метка:</strong> <span th:text="${article.label}" class="underline"></span></p>
+    <p><strong>Автор:</strong> <span th:text="${article.author}" class="underline"></span></p>
+    <p><strong>Название:</strong> <span th:text="${article.title}" class="underline"></span></p>
+    <p><strong>Текст статьи:</strong> <span th:text="${article.text}" class="underline"></span></p>
+
+    <form id="articleForm" th:action="@{/articles/delete/{id}(id=${article.id})}" method="POST" th:object="${article}">
+        <button type="button" onclick="submitForm()" class="my-custom-button">Удалить статью</button>
+    </form>
+</div>
+
+<script>
+    function submitForm() {
+        if (confirm("Вы уверены, что хотите удалить эту статью?")) {
+            const form = document.getElementById('articleForm');
+            const articleId = form.getAttribute('action').split('/').pop();
+
+            const articleData = {
+                id: articleId
+            };
+
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(articleData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "/articles/page/1";
+                    } else {
+                        console.error('Ошибка при удалении статьи');
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка при удалении статьи:', error);
+                });
+        }
+    }
+</script>
+
+<footer th:insert="~{blocks/footer.html :: footer}"></footer>
+
+</body>
+</html>
