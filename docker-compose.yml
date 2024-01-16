@@ -1,24 +1,13 @@
 version: '3'
 services:
-  site-postgres:
-    image: library/postgres:${KC_POSTGRES_IMAGE_TAG:-14}
-    container_name: ${POSTGRES_CONTAINER_NAME:-postgres-site}
-    restart: on-failure
+  database:
+    image: 'postgres:15.5'
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-    healthcheck:
-      test: pg_isready -d postgres
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_DB=books'
+      - 'POSTGRES_PASSWORD=root'
     ports:
-      - ${KC_POSTGRES_PORT_MAPPING:-5436}:5432
-    deploy:
-      resources:
-        limits:
-          memory: 256M
+      - '5432'
 
   postgres:
       image: postgres
@@ -30,6 +19,8 @@ services:
         POSTGRES_PASSWORD: keycloakpass
       networks:
         - keycloak-network
+      ports:
+        - '5432'
 
   keycloak_2:
       image: jboss/keycloak:16.1.1

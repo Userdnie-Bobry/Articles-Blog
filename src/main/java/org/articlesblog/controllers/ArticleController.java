@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ArticleController {
     private final ArticleService articleService;
     @PostMapping("/articles/new")
+    //User
     @Operation(summary = "Создание новой статьи")
     public ResponseEntity<EditArticleDTO> createArticle(@RequestBody EditArticleDTO articleDTO) {
         EditArticleDTO createdArticle = articleService.createArticle(articleDTO);
@@ -26,6 +27,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/edit/{id}")
+    //User
     @Operation(summary = "Обновление данных статьи по id")
     public ResponseEntity<EditArticleDTO> updateArticle(@PathVariable Integer id, @RequestBody EditArticleDTO articleDTO) {
         EditArticleDTO updatedArticle = articleService.updateArticle(id, articleDTO);
@@ -33,6 +35,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/delete/{id}")
+    //User
     @Operation(summary = "Удаление статьи по id")
     public ResponseEntity<String> deleteArticle(@PathVariable Integer id) {
         String deletedArticle = articleService.deleteArticle(id);
