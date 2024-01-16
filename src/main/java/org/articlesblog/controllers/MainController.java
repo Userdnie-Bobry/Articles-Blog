@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-public class MainPageController {
+public class MainController {
     private final ArticleService articleService;
 
     @GetMapping("/")

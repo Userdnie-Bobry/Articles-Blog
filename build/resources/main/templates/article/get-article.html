@@ -52,14 +52,37 @@
     <p><strong>Текст статьи:</strong> <span th:text="${article.text}" class="underline"></span></p>
 
     <form id="articleForm" th:action="@{/articles/delete/{id}(id=${article.id})}" method="POST" th:object="${article}">
-        <button type="button" onclick="confirmDelete()" class="my-custom-button">Удалить статью</button>
+        <button type="button" onclick="submitForm()" class="my-custom-button">Удалить статью</button>
     </form>
 </div>
 
 <script>
-    function confirmDelete() {
+    function submitForm() {
         if (confirm("Вы уверены, что хотите удалить эту статью?")) {
-            document.getElementById("articleForm").submit();
+            const form = document.getElementById('articleForm');
+            const articleId = form.getAttribute('action').split('/').pop();
+
+            const articleData = {
+                id: articleId
+            };
+
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(articleData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "/articles/page/1";
+                    } else {
+                        console.error('Ошибка при удалении статьи');
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка при удалении статьи:', error);
+                });
         }
     }
 </script>

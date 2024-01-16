@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-public class GetArticlesController {
+public class UIController {
     private final ArticleService articleService;
 
     @GetMapping("/articles/{id}")

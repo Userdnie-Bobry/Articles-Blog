@@ -64,22 +64,22 @@ public class ArticleServiceImpl implements ArticleService{
         return articleDTOs;
     }
 
-    @Transactional
     @Override
-    public void createArticle(EditArticleDTO articleDTO) {
+    @Transactional
+    public EditArticleDTO createArticle(EditArticleDTO articleDTO) {
         Article article = new Article();
         setArticle(articleDTO, article);
         article.setDateCreate(LocalDateTime.now());
         article.setDateChange(null);
 
         Article savedArticle = articleRepository.save(article);
-        new EditArticleDTO(savedArticle.getId(), savedArticle.getTitle(), savedArticle.getDescription(), savedArticle.getText(),
+        return new EditArticleDTO(savedArticle.getId(), savedArticle.getTitle(), savedArticle.getDescription(), savedArticle.getText(),
                 savedArticle.getAuthor(), article.getLabel());
     }
 
-    @Transactional
     @Override
-    public void updateArticle(Integer id, EditArticleDTO articleDTO) {
+    @Transactional
+    public EditArticleDTO updateArticle(Integer id, EditArticleDTO articleDTO) {
         Article article = articleRepository.findById(id)
                 .map(existingArticle -> {
                     setArticle(articleDTO, existingArticle);
@@ -89,18 +89,18 @@ public class ArticleServiceImpl implements ArticleService{
                 })
                 .orElseThrow(() -> new RuntimeException("Статья с id " + id + " не найдена."));
 
-        new EditArticleDTO(article.getId(), article.getTitle(), article.getDescription(), article.getText(),
+        return new EditArticleDTO(article.getId(), article.getTitle(), article.getDescription(), article.getText(),
                 article.getAuthor(), article.getLabel());
     }
 
-    @Transactional
     @Override
-    public void deleteArticle(Integer id) {
+    @Transactional
+    public String deleteArticle(Integer id) {
         Optional<Article> articleOptional = articleRepository.findById(id);
-        articleOptional.map(article -> {
+        return articleOptional.map(article -> {
             articleRepository.deleteById(id);
             return "Статья " + id + " удалена";
-        });
+        }).orElse("Статья не найдена");
     }
 
     @Override

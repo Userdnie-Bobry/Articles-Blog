@@ -8,8 +8,8 @@ public interface ArticleService {
     GetArticleDTO getArticle(Integer id);
     EditArticleDTO getToEditArticle(Integer id);
     List<MainPageArticleDTO> getAllArticles();
-    void createArticle(EditArticleDTO articleDTO);
-    void updateArticle(Integer id, EditArticleDTO articleDTO);
-    void deleteArticle(Integer id);
+    EditArticleDTO createArticle(EditArticleDTO articleDTO);
+    EditArticleDTO updateArticle(Integer id, EditArticleDTO articleDTO);
+    String deleteArticle(Integer id);
     List<SearchArticleDTO> searchArticles(String searchText);
 }
