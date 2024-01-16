@@ -2,6 +2,7 @@ package org.articlesblog.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.articlesblog.dto.ArticleDTO;
@@ -20,7 +21,6 @@ public class MainPageController {
     private final ArticleService articleService;
 
     @GetMapping("/")
-    @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Получение всех статей")
     public String getAllArticles(Model model) {
         List<ArticleDTO> articles = articleService.getAllArticles();
@@ -38,7 +38,7 @@ public class MainPageController {
     }
 
     @GetMapping("/about")
-    @PreAuthorize("hasRole('ADMIN')")
+    @RolesAllowed("admin")
     @Operation(summary = "О нас")
     public String about(Model model){
         model.addAttribute("title", "О нас");

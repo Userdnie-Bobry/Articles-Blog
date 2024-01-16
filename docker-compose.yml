@@ -1,27 +1,5 @@
-version: "3.9"
+version: '3'
 services:
-  keycloak-postgres:
-    image: library/postgres:${KC_POSTGRES_IMAGE_TAG:-14}
-    container_name: ${POSTGRES_CONTAINER_NAME:-postgres}
-    restart: on-failure
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-    healthcheck:
-      test: pg_isready -d postgres
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 5s
-    ports:
-      - ${KC_POSTGRES_PORT_MAPPING:-5435}:5432
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-
-
   site-postgres:
     image: library/postgres:${KC_POSTGRES_IMAGE_TAG:-14}
     container_name: ${POSTGRES_CONTAINER_NAME:-postgres-site}
@@ -35,7 +13,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-      start_period: 5s
     ports:
       - ${KC_POSTGRES_PORT_MAPPING:-5436}:5432
     deploy:
@@ -43,27 +20,40 @@ services:
         limits:
           memory: 256M
 
-  keycloak:
-    image: keycloak/keycloak:22.0.3
-    container_name: keycloak
-    command:
-        - start --auto-build --db postgres --hostname-strict-https false --hostname-strict false --proxy edge --http-enabled true --import-realm --spi-user-profile-legacy-user-profile-read-only-attributes *_RES_ACCESS_MODE
-    environment:
-        KC_DB_URL: jdbc:postgresql://keycloak-postgres:5432/postgres
-        KC_DB_USERNAME: postgres
-        KC_DB_PASSWORD: postgres
-        KC_DB_SCHEMA: public
-        KC_FEATURES: preview
-        KEYCLOAK_ADMIN: admin
-        KEYCLOAK_ADMIN_PASSWORD: admin
-    ports:
-        - 8282:8080
-    depends_on:
-        keycloak-postgres:
-          condition: service_healthy
-    healthcheck:
-        test: [ "CMD", "curl", "-f", "http://0.0.0.0:8080/realms/master" ]
-        start_period: 10s
-        interval: 30s
-        retries: 3
-        timeout: 5s
+  postgres:
+      image: postgres
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+      environment:
+        POSTGRES_DB: keycloakdb
+        POSTGRES_USER: keycloakuser
+        POSTGRES_PASSWORD: keycloakpass
+      networks:
+        - keycloak-network
+
+  keycloak_2:
+      image: jboss/keycloak:16.1.1
+      ports:
+        - 8383:8080
+      environment:
+        DB_VENDOR: POSTGRES
+        DB_ADDR: postgres
+        DB_DATABASE: keycloakdb
+        DB_SCHEMA: public
+        DB_USER: keycloakuser
+        DB_PASSWORD: keycloakpass
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD: adminpass
+
+      networks:
+        - keycloak-network
+      depends_on:
+        - postgres
+
+networks:
+    keycloak-network:
+      driver: bridge
+
+volumes:
+    postgres_data:
+      driver: local
