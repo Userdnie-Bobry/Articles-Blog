@@ -16,4 +16,5 @@ public class EditArticleDTO {
     String text;
     String author;
     String label;
+    String image;
 }

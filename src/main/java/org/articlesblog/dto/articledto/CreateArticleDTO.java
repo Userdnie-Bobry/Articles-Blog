@@ -4,18 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetArticleDTO {
+public class CreateArticleDTO {
     int id;
     String title;
+    String description;
     String text;
     String author;
     String label;
-    String dateCreate;
-    String dateChange;
-    String image;
+    MultipartFile multipartFile;
 }

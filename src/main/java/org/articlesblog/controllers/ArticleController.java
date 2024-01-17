@@ -4,13 +4,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.articlesblog.dto.articledto.CreateArticleDTO;
 import org.articlesblog.dto.articledto.EditArticleDTO;
 import org.articlesblog.services.article.ArticleService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Article's blog")
 @Slf4j
@@ -20,15 +18,15 @@ public class ArticleController {
     private final ArticleService articleService;
     @PostMapping("/articles/new")
     @Operation(summary = "Создание новой статьи")
-    public ResponseEntity<EditArticleDTO> createArticle(@RequestBody EditArticleDTO articleDTO) {
+    public ResponseEntity<EditArticleDTO> createArticle(@ModelAttribute CreateArticleDTO articleDTO) {
         EditArticleDTO createdArticle = articleService.createArticle(articleDTO);
         return ResponseEntity.ok(createdArticle);
     }
 
     @PostMapping("/articles/edit/{id}")
     @Operation(summary = "Обновление данных статьи по id")
-    public ResponseEntity<EditArticleDTO> updateArticle(@PathVariable Integer id, @RequestBody EditArticleDTO articleDTO) {
-        EditArticleDTO updatedArticle = articleService.updateArticle(id, articleDTO);
+    public ResponseEntity<EditArticleDTO> updateArticle(@PathVariable Integer id, @ModelAttribute CreateArticleDTO articleDTO) {
+        EditArticleDTO updatedArticle = articleService.editArticle(id, articleDTO);
         return ResponseEntity.ok(updatedArticle);
     }
 

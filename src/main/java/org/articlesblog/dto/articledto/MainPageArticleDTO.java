@@ -16,4 +16,5 @@ public class MainPageArticleDTO {
     String title;
     String description;
     String dateCreate;
+    String image;
 }
