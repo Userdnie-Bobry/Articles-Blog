@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.articlesblog.dto.MainPageArticleDTO;
-import org.articlesblog.dto.SearchArticleDTO;
+import org.articlesblog.dto.articledto.MainPageArticleDTO;
+import org.articlesblog.dto.articledto.SearchArticleDTO;
 import org.articlesblog.services.article.ArticleService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +19,6 @@ import java.util.List;
 @Controller
 public class MainController {
     private final ArticleService articleService;
-
     @GetMapping("/")
     @Operation(summary = "Стартовая страница")
     public String infiniteArticles(){
@@ -64,6 +63,7 @@ public class MainController {
     }
 
     @GetMapping("/articles/search")
+    @Operation(summary = "Поиск")
     public String searchArticles(@RequestParam("searchText") String searchText, Model model) {
         if (searchText.isEmpty()) {
             return "redirect:/articles/page/1";

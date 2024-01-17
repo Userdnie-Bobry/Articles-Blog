@@ -1,4 +1,4 @@
-package org.articlesblog.dto;
+package org.articlesblog.dto.articledto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

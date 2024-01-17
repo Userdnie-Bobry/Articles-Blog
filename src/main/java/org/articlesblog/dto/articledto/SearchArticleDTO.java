@@ -1,4 +1,4 @@
-package org.articlesblog.dto;
+package org.articlesblog.dto.articledto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,11 +9,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EditArticleDTO {
+public class SearchArticleDTO {
     int id;
     String title;
     String description;
     String text;
     String author;
     String label;
+    String dateCreate;
 }

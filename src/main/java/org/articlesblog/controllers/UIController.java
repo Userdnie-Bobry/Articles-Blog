@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.articlesblog.dto.EditArticleDTO;
-import org.articlesblog.dto.GetArticleDTO;
+import org.articlesblog.dto.articledto.EditArticleDTO;
+import org.articlesblog.dto.articledto.GetArticleDTO;
 import org.articlesblog.services.article.ArticleService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class UIController {
     private final ArticleService articleService;
-
     @GetMapping("/articles/{id}")
     @Operation(summary = "Получение данных статьи по id")
     public String getArticle(@PathVariable Integer id, Model model) {
@@ -28,13 +27,13 @@ public class UIController {
     }
 
     @GetMapping("/articles/new")
-    @Operation(summary = "Создание новой статьи")
+    @Operation(summary = "Получение страницы создания статьи")
     public String createArticle() {
         return "article/create-article";
     }
 
     @GetMapping("/articles/edit/{id}")
-    @Operation(summary = "Обновление данных статьи по id")
+    @Operation(summary = "Получение страницы редактирования статьи по id")
     public String updateArticle(@PathVariable Integer id, Model model) {
         EditArticleDTO article = articleService.getToEditArticle(id);
         model.addAttribute("article", article);

@@ -1,6 +1,9 @@
 package org.articlesblog.services.article;
 
-import org.articlesblog.dto.*;
+import org.articlesblog.dto.articledto.EditArticleDTO;
+import org.articlesblog.dto.articledto.GetArticleDTO;
+import org.articlesblog.dto.articledto.MainPageArticleDTO;
+import org.articlesblog.dto.articledto.SearchArticleDTO;
 
 import java.util.List;
 

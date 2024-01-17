@@ -1,10 +1,10 @@
 package org.articlesblog.services.article;
 
 import lombok.RequiredArgsConstructor;
-import org.articlesblog.dto.EditArticleDTO;
-import org.articlesblog.dto.GetArticleDTO;
-import org.articlesblog.dto.MainPageArticleDTO;
-import org.articlesblog.dto.SearchArticleDTO;
+import org.articlesblog.dto.articledto.EditArticleDTO;
+import org.articlesblog.dto.articledto.GetArticleDTO;
+import org.articlesblog.dto.articledto.MainPageArticleDTO;
+import org.articlesblog.dto.articledto.SearchArticleDTO;
 import org.articlesblog.jpa.entity.Article;
 import org.articlesblog.jpa.repository.ArticleRepository;
 import org.springframework.stereotype.Service;
