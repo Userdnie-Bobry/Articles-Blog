@@ -39,6 +39,11 @@
             text-align: justify;
         }
 
+        .centered-content img {
+            max-width: 50%;
+            height: auto;
+        }
+
         .navbar-nav > li > a {
             padding: 15px;
         }
@@ -54,6 +59,7 @@
 <header th:insert="~{blocks/header.html :: header}"></header>
 
 <div class="py-5 centered-content mt-md-0">
+    <img th:src="${article.image}" class="bd-placeholder-img card-img-top" alt="Изображение статьи"><br>
     <p><strong>Дата создания:</strong> <span th:text="${article.dateCreate}" class="underline"></span></p>
     <p><strong>Дата изменения:</strong> <span th:text="${article.dateChange}" class="underline"></span></p>
     <p><strong>Метка:</strong> <span th:text="${article.label}" class="underline"></span></p>
@@ -79,23 +85,23 @@
                 id: articleId
             };
 
-            fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(articleData)
-            })
-                .then(response => {
-                    if (response.ok) {
-                        window.location.href = "/articles/page/1";
-                    } else {
-                        console.error('Ошибка при удалении статьи');
-                    }
-                })
-                .catch(error => {
-                    console.error('Ошибка при удалении статьи:', error);
-                });
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', form.action, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    window.location.href = "/articles/page/1";
+                } else {
+                    console.error('Ошибка при удалении статьи');
+                }
+            };
+
+            xhr.onerror = function() {
+                console.error('Ошибка при удалении статьи:', xhr.statusText);
+            };
+
+            xhr.send(JSON.stringify(articleData));
         }
     }
 </script>

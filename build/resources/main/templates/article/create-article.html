@@ -52,6 +52,20 @@
         #description {
             resize: both;
         }
+
+        #imagePreview {
+            width: 300px;
+            height: 165px;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        #imagePreview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
@@ -80,6 +94,13 @@
             <label for="text">Текст статьи:</label>
             <textarea id="text" name="text" required></textarea>
         </strong></p>
+        <p><strong>
+            <label for="multipartFile">Загрузить изображение (300x165): </label><br>
+            <input type="file" id="multipartFile" name="multipartFile" accept="image/*" onchange="previewImage()" style="display: none;">
+            <label for="multipartFile" style="cursor: pointer; color: blue; text-decoration: underline;">Выберите файл</label>
+        </strong></p>
+        <div id="imagePreview"></div><br>
+
         <button type="button" onclick="submitForm()" class="btn btn-outline-success">Создать статью</button>
         <button type="submit" class="btn btn-outline-primary">Сгенерировать статью</button>
     </form>
@@ -89,15 +110,13 @@
     function submitForm() {
         const form = document.getElementById('articleForm');
         const formData = new FormData(form);
-        const json = {};
 
-        for (const pair of formData.entries()) {
-            json[pair[0]] = pair[1];
-        }
+        const imageInput = document.getElementById('multipartFile');
+        const imageFile = imageInput.files[0];
+        formData.append('imageFile', imageFile);
 
         const xhr = new XMLHttpRequest();
         xhr.open('POST', '/articles/new');
-        xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onload = function () {
             if (xhr.status === 200) {
                 window.location.href = "/articles/page/1";
@@ -105,7 +124,25 @@
                 console.error('Ошибка при создании статьи');
             }
         };
-        xhr.send(JSON.stringify(json));
+        xhr.send(formData);
+    }
+
+    function previewImage() {
+        const preview = document.querySelector('#imagePreview');
+        const file = document.querySelector('input[type=file]').files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = function () {
+            const img = document.createElement('img');
+            img.src = reader.result.toString();
+            preview.innerHTML = '';
+            preview.appendChild(img);
+        }
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.innerHTML = 'Файл не выбран';
+        }
     }
 
     function submitFormGenerate(){

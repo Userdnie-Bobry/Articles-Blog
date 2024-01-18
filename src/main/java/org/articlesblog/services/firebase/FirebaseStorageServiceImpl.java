@@ -60,10 +60,8 @@ public class FirebaseStorageServiceImpl implements FirebaseStorageService {
 
     @Override
     public void deleteImage(String id) {
-        if(id != null) {
-            String fileName = id.substring(id.lastIndexOf("/") + 1, id.indexOf("?"));
-            storage.get(BUCKET_NAME, fileName).delete();
-        }
+        String fileName = id.substring(id.lastIndexOf("/") + 1, id.indexOf("?"));
+        storage.get(BUCKET_NAME, fileName).delete();
     }
 
     private static String encodeURIComponent(String s) {

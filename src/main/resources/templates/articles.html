@@ -27,22 +27,29 @@
         }
 
         .album {
-            transform: translate(0, 60px);
+            transform: translate(0, 10px);
+        }
+
+        header {
+            transform: translate(0, 0px);
+            padding: 20px;
         }
 
         footer {
-            transform: translate(0, 22px);
+            transform: translate(0, 10px);
             padding: 20px;
         }
 
         .btn-group a + a {
             margin-left: 5px;
         }
+
     </style>
 </head>
 <body>
 
 <header th:insert="~{blocks/header.html :: header}"></header>
+<div th:replace="~{blocks/page_switcher :: page_switcher}" class="page-switcher"></div>
 
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
@@ -74,7 +81,7 @@
     </div>
 </div>
 
-<object type="text/html" data="blocks/page_switcher.html"></object>
+<div th:replace="~{blocks/page_switcher :: page_switcher}"></div>
 <footer th:insert="~{blocks/footer.html :: footer}"></footer>
 
 </body>

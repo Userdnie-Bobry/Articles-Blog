@@ -46,6 +46,20 @@
         #description {
             resize: both;
         }
+
+        #imagePreview {
+            width: 300px;
+            height: 165px;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        #imagePreview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 
 </head>
@@ -76,6 +90,16 @@
             <textarea id="text" name="text" required th:field="*{text}"></textarea>
         </strong></p>
 
+        <p><strong>
+            <label for="multipartFile">Загрузить изображение (300x165): </label><br>
+            <input type="file" id="multipartFile" name="multipartFile" accept="image/*" onchange="previewImage()" style="display: none;">
+            <label for="multipartFile" style="cursor: pointer; color: blue; text-decoration: underline;">Выберите файл</label>
+        </strong></p>
+        <div id="imagePreview">
+            <img th:src="${article.image}" class="bd-placeholder-img card-img-top" width="100%"
+                 height="225" alt="Изображение статьи">
+        </div><br>
+
         <button type="button" onclick="submitForm()" class="btn btn-outline-success">Обновить статью</button>
     </form>
 </div>
@@ -84,34 +108,35 @@
     function submitForm() {
         const form = document.getElementById('articleForm');
         const formData = new FormData(form);
-        const articleId = form.getAttribute('action').split('/').pop();
 
-        const articleData = {
-            id: articleId,
-            label: formData.get('label'),
-            author: formData.get('author'),
-            title: formData.get('title'),
-            description: formData.get('description'),
-            text: formData.get('text')
+        formData.append('multipartFile', formData.get('image'));
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', form.getAttribute('action'));
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                window.location.href = "/articles/page/1";
+            } else {
+                console.error('Ошибка при обновлении статьи');
+            }
         };
+        xhr.send(formData);
+    }
 
-        fetch(form.action, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(articleData)
-        })
-            .then(response => {
-                if (response.ok) {
-                    window.location.href = "/articles/page/1";
-                } else {
-                    console.error('Ошибка при обновлении статьи');
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка при обновлении статьи:', error);
-            });
+    function previewImage() {
+        const preview = document.querySelector('#imagePreview');
+        const file = document.querySelector('input[type=file]').files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = function () {
+            const img = document.createElement('img');
+            img.src = reader.result.toString();
+            preview.innerHTML = '';
+            preview.appendChild(img);
+        }
+        if (file) {
+            reader.readAsDataURL(file);
+        }
     }
 </script>
 

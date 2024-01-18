@@ -1,11 +1,13 @@
 package org.articlesblog.dto.gigachatdto;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // dto запроса к гигачату
+@Setter
 @Getter
 public class ChatRequest {
     private String model;
@@ -18,21 +20,5 @@ public class ChatRequest {
 
         this.messages = new ArrayList<>();
         this.messages.add(new Message("user", prompt));
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-    }
-
-    public void setN(int n) {
-        this.n = n;
-    }
-
-    public void setTemperature(double temperature) {
-        this.temperature = temperature;
     }
 }

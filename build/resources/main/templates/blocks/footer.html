@@ -7,7 +7,6 @@
     <title>Footer</title>
 
     <style>
-        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
         * {
             margin: 0;
             padding: 0;
@@ -46,27 +45,6 @@
 
 <body>
 <div th:fragment="footer">
-
-    <div th:fragment="page_switcher">
-        <div class="container mt-5">
-            <div class="row">
-                <div class="col">
-                    <a th:if="${currentPage > 1}" th:href="@{/articles/page/{id}(id=${currentPage - 1})}">
-                        <button type="button" class="btn btn-primary">Назад</button>
-                    </a>
-                </div>
-                <div class="col text-center">
-                    <p>Страница <span th:text="${currentPage}"></span> из <span th:text="${totalPages}"></span></p>
-                </div>
-                <div class="col text-end">
-                    <a th:if="${currentPage < totalPages}" th:href="@{/articles/page/{id}(id=${currentPage + 1})}">
-                        <button type="button" class="btn btn-primary">Вперед</button>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <footer class="footer">
         <div class="container">
             <p class="float-end mb-1">

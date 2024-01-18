@@ -5,6 +5,7 @@ import org.articlesblog.dto.articledto.*;
 import org.articlesblog.jpa.entity.Article;
 import org.articlesblog.jpa.repository.ArticleRepository;
 import org.articlesblog.services.firebase.FirebaseStorageService;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +47,7 @@ public class ArticleServiceImpl implements ArticleService{
 
     @Override
     public List<MainPageArticleDTO> getAllArticles() {
-        List<Article> articles = articleRepository.findAll();
+        List<Article> articles = articleRepository.findAllSortedById();
         List<MainPageArticleDTO> articleDTOs = new ArrayList<>();
         for (Article article : articles) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy, HH:mm");

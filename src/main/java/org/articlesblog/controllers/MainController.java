@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 @Tag(name = "Main page")
 @Slf4j
@@ -45,7 +45,14 @@ public class MainController {
             return "articles";
         }
 
-        List<MainPageArticleDTO> articlesOnPage = articles.subList(startIndex, endIndex);
+        List<MainPageArticleDTO> articlesOnPage = new ArrayList<>();
+
+        for (int i = endIndex - 1; i >= startIndex; i--) {
+            articlesOnPage.add(articles.get(i));
+        }
+
+        Collections.reverse(articlesOnPage);
+
         model.addAttribute("articles", articlesOnPage);
         model.addAttribute("title", "Страница " + id + " из " + totalPages);
         model.addAttribute("currentPage", id);
