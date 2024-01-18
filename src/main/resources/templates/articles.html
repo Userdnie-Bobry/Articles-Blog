@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <script src="/docs/5.3/assets/js/color-modes.js"></script>
     <title th:text="${title}"></title>
     <style>
         .bd-placeholder-img {
@@ -12,6 +11,12 @@
             -webkit-user-select: none;
             -moz-user-select: none;
             user-select: none;
+        }
+
+        body {
+            background-image: url('static/images/370232_escape_from_tarkov_patches_collection_escapefromtarkov_patch.jpg');
+            background-size: cover;
+            background-attachment: fixed;
         }
 
         @media (min-width: 768px) {
@@ -27,11 +32,14 @@
 
         footer {
             transform: translate(0, 22px);
-            padding: 10px;
+            padding: 20px;
+        }
+
+        .btn-group a + a {
+            margin-left: 5px;
         }
     </style>
 </head>
-
 <body>
 
 <header th:insert="~{blocks/header.html :: header}"></header>
@@ -44,10 +52,8 @@
                     <img th:src="${article.image}" class="bd-placeholder-img card-img-top" width="100%"
                          height="225" alt="Изображение статьи">
                     <div class="card-body">
-                        <div class="card-text">
-                            <strong th:text="${article.label}"></strong>
-                        </div>
-                        <div class="card-text" th:text="${article.author}"></div>
+                        <strong>Метка:</strong> <span th:text="${article.label}" class="underline"></span>
+                        <p><strong>Автор:</strong> <span th:text="${article.author}" class="underline"></span></p>
                         <h5 class="card-title" th:text="${article.title}"></h5>
                         <p class="card-text" th:text="${article.description}"></p>
                         <div class="d-flex justify-content-between align-items-center">
@@ -55,8 +61,8 @@
                                 <a th:href="@{/articles/{id}(id=${article.id})}">
                                     <button type="button" class="btn btn-sm btn-outline-secondary">Просмотр</button>
                                 </a>
-                                <a th:href="@{/articles/edit/{id}(id=${article.id})}">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Редактирование</button>
+                                <a>
+                                    <button type="button" class="btn btn-sm btn-outline-primary ml-2">Пересказать</button>
                                 </a>
                             </div>
                             <small class="text-body-secondary" th:text="${article.dateCreate}"></small>
@@ -68,6 +74,7 @@
     </div>
 </div>
 
+<object type="text/html" data="blocks/page_switcher.html"></object>
 <footer th:insert="~{blocks/footer.html :: footer}"></footer>
 
 </body>

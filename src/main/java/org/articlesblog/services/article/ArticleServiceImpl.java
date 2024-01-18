@@ -69,7 +69,6 @@ public class ArticleServiceImpl implements ArticleService{
     @Transactional
     public EditArticleDTO createArticle(CreateArticleDTO articleDTO) {
         Article article = new Article();
-        // setArticle(articleDTO, article);
         article.setTitle(articleDTO.getTitle());
         article.setDescription(articleDTO.getDescription());
         article.setAuthor(articleDTO.getAuthor());
@@ -77,7 +76,6 @@ public class ArticleServiceImpl implements ArticleService{
         article.setText(articleDTO.getText());
         article.setImage(firebaseStorageService.uploadImage(articleDTO.getMultipartFile()));
         article.setDateCreate(LocalDateTime.now());
-        // article.setDateChange(null);
 
         Article savedArticle = articleRepository.save(article);
         return new EditArticleDTO(savedArticle.getId(), savedArticle.getTitle(), savedArticle.getDescription(), savedArticle.getText(),
@@ -89,7 +87,6 @@ public class ArticleServiceImpl implements ArticleService{
     public EditArticleDTO editArticle(Integer id, CreateArticleDTO articleDTO) {
         Article article = articleRepository.findById(id)
                 .map(existingArticle -> {
-                    // setArticle(articleDTO, existingArticle);
                     existingArticle.setTitle(articleDTO.getTitle());
                     existingArticle.setDescription(articleDTO.getDescription());
                     existingArticle.setAuthor(articleDTO.getAuthor());
@@ -137,14 +134,6 @@ public class ArticleServiceImpl implements ArticleService{
 
         return getSearchArticleDTOS(articles);
     }
-
-//    private void setArticle(EditArticleDTO articleDTO, Article existingArticle) {
-//        existingArticle.setTitle(articleDTO.getTitle());
-//        existingArticle.setDescription(articleDTO.getDescription());
-//        existingArticle.setAuthor(articleDTO.getAuthor());
-//        existingArticle.setLabel(articleDTO.getLabel());
-//        existingArticle.setText(articleDTO.getText());
-//    }
 
     private static List<SearchArticleDTO> getSearchArticleDTOS(List<Article> articles) {
         List<SearchArticleDTO> articleDTOs = new ArrayList<>();

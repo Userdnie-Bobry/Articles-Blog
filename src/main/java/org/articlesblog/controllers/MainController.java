@@ -20,8 +20,14 @@ import java.util.List;
 public class MainController {
     private final ArticleService articleService;
     @GetMapping("/")
-    @Operation(summary = "Стартовая страница")
-    public String infiniteArticles(){
+    @Operation(summary = "Переадресация на главную страницу")
+    public String slashArticles(){
+        return "redirect:/articles/page/1";
+    }
+
+    @GetMapping("/articles")
+    @Operation(summary = "Переадресация на главную страницу")
+    public String anotherSlashArticles(){
         return "redirect:/articles/page/1";
     }
 

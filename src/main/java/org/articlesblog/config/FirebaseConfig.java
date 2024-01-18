@@ -11,7 +11,7 @@ import java.io.IOException;
 
 @Getter
 public class FirebaseConfig {
-    private static final String FILE_NAME = "C:\\Users\\dayof\\IdeaProjects\\articlesBlog\\articles-b1def-firebase-adminsdk-e85q5-51852b2062.json";
+    private static final String FILE_NAME = "articles-b1def-firebase-adminsdk-e85q5-51852b2062.json";
 
     private Storage storage;
 
