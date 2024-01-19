@@ -16,12 +16,14 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
 public class FirebaseStorageServiceImpl implements FirebaseStorageService {
     private static final String BUCKET_NAME = "articles-b1def.appspot.com";
     private final Storage storage;
+    private static final String IMAGE_NAME = "https://firebasestorage.googleapis.com/v0/b/articles-b1def.appspot.com/o/article-image.jpg?alt=media&token=b53c0587-d2d6-4e5f-b788-0c7bae76d2ba";
 
     public FirebaseStorageServiceImpl() throws IOException {
         FirebaseConfig config = new FirebaseConfig();
@@ -31,22 +33,27 @@ public class FirebaseStorageServiceImpl implements FirebaseStorageService {
     @Override
     public String uploadImage(MultipartFile file) {
         try {
-            String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
-            Path path = Paths.get(fileName);
-            Files.copy(file.getInputStream(), path);
+            if (!file.isEmpty()) {
+                String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
+                Path path = Paths.get(fileName);
+                Files.copy(file.getInputStream(), path);
 
-            Thumbnails.of(path.toFile())
-                    .crop(Positions.CENTER)
-                    .size(660,360)
-                    .toFile(path.toFile());
+                Thumbnails.of(path.toFile())
+                        .crop(Positions.CENTER)
+                        .size(660, 360)
+                        .toFile(path.toFile());
 
-            BlobId blobId = BlobId.of(BUCKET_NAME, fileName);
-            BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.getContentType()).build();
-            Blob blob = storage.create(blobInfo, Files.readAllBytes(path));
-            Files.delete(path);
+                BlobId blobId = BlobId.of(BUCKET_NAME, fileName);
+                BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.getContentType()).build();
+                Blob blob = storage.create(blobInfo, Files.readAllBytes(path));
+                Files.delete(path);
 
-            return "https://firebasestorage.googleapis.com/v0/b/" + blob.getBucket() + "/o/" +
-                    encodeURIComponent(blob.getName()) + "?alt=media&token=" + UUID.randomUUID();
+                return "https://firebasestorage.googleapis.com/v0/b/" + blob.getBucket() + "/o/" +
+                        encodeURIComponent(blob.getName()) + "?alt=media&token=" + UUID.randomUUID();
+            }
+            else {
+                return IMAGE_NAME;
+            }
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload image", e);
         }
@@ -60,8 +67,10 @@ public class FirebaseStorageServiceImpl implements FirebaseStorageService {
 
     @Override
     public void deleteImage(String id) {
-        String fileName = id.substring(id.lastIndexOf("/") + 1, id.indexOf("?"));
-        storage.get(BUCKET_NAME, fileName).delete();
+        if (!Objects.equals(id, IMAGE_NAME)) {
+            String fileName = id.substring(id.lastIndexOf("/") + 1, id.indexOf("?"));
+            storage.get(BUCKET_NAME, fileName).delete();
+        }
     }
 
     private static String encodeURIComponent(String s) {
