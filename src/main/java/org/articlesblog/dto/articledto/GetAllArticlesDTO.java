@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MainPageArticleDTO {
+public class GetAllArticlesDTO {
     int id;
     String label;
     String author;

@@ -7,9 +7,8 @@ import java.util.List;
 public interface ArticleService {
     GetArticleDTO getArticle(Integer id);
     EditArticleDTO getToEditArticle(Integer id);
-    List<MainPageArticleDTO> getAllArticles();
+    List<GetAllArticlesDTO> getAllArticles();
     EditArticleDTO createArticle(CreateArticleDTO articleDTO);
     EditArticleDTO editArticle(Integer id, CreateArticleDTO articleDTO);
     String deleteArticle(Integer id);
-    List<SearchArticleDTO> searchArticles(String searchText);
 }

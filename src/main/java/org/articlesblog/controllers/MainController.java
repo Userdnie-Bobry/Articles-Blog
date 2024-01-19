@@ -4,9 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.articlesblog.dto.articledto.MainPageArticleDTO;
-import org.articlesblog.dto.articledto.SearchArticleDTO;
+import org.articlesblog.dto.articledto.GetAllArticlesDTO;
 import org.articlesblog.services.article.ArticleService;
+import org.articlesblog.services.hibernatesearch.SearchService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +19,7 @@ import java.util.*;
 @Controller
 public class MainController {
     private final ArticleService articleService;
+    private final SearchService searchService;
     @GetMapping("/")
     @Operation(summary = "Переадресация на главную страницу")
     public String slashArticles(){
@@ -35,7 +36,7 @@ public class MainController {
     @Operation(summary = "Получение статей по страницам")
     public String getArticlesByPage(@PathVariable Integer id, Model model) {
         int pageSize = 9;
-        List<MainPageArticleDTO> articles = articleService.getAllArticles();
+        List<GetAllArticlesDTO> articles = articleService.getAllArticles();
 
         int totalPages = (int) Math.ceil((double) articles.size() / pageSize);
         int startIndex = (id - 1) * pageSize;
@@ -45,7 +46,7 @@ public class MainController {
             return "articles";
         }
 
-        List<MainPageArticleDTO> articlesOnPage = new ArrayList<>();
+        List<GetAllArticlesDTO> articlesOnPage = new ArrayList<>();
 
         for (int i = endIndex - 1; i >= startIndex; i--) {
             articlesOnPage.add(articles.get(i));
@@ -82,7 +83,7 @@ public class MainController {
             return "redirect:/articles/page/1";
         }
 
-        List<SearchArticleDTO> articles = articleService.searchArticles(searchText);
+        List<GetAllArticlesDTO> articles = searchService.searchBy(searchText);
         model.addAttribute("articles", articles);
         return "articles";
     }

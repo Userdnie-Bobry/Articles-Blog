@@ -5,7 +5,6 @@ import org.articlesblog.dto.articledto.*;
 import org.articlesblog.jpa.entity.Article;
 import org.articlesblog.jpa.repository.ArticleRepository;
 import org.articlesblog.services.firebase.FirebaseStorageService;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +13,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -46,13 +44,13 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     @Override
-    public List<MainPageArticleDTO> getAllArticles() {
+    public List<GetAllArticlesDTO> getAllArticles() {
         List<Article> articles = articleRepository.findAllSortedById();
-        List<MainPageArticleDTO> articleDTOs = new ArrayList<>();
+        List<GetAllArticlesDTO> articleDTOs = new ArrayList<>();
         for (Article article : articles) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy, HH:mm");
             String createDate = article.getDateCreate().format(formatter);
-            MainPageArticleDTO articleDTO = new MainPageArticleDTO(
+            GetAllArticlesDTO articleDTO = new GetAllArticlesDTO(
                     article.getId(),
                     article.getLabel(),
                     article.getAuthor(),
@@ -118,40 +116,5 @@ public class ArticleServiceImpl implements ArticleService{
             }
             return "Статья " + id + " удалена";
         }).orElse("Статья не найдена");
-    }
-
-    @Override
-    public List<SearchArticleDTO> searchArticles(String searchText) {
-        String searchTextIgnoreCase = searchText.toLowerCase();
-
-        List<Article> articles = new ArrayList<>();
-        articles.addAll(articleRepository.findAllByTitleContainingIgnoreCase(searchTextIgnoreCase));
-        articles.addAll(articleRepository.findAllByDescriptionContainingIgnoreCase(searchTextIgnoreCase));
-        articles.addAll(articleRepository.findAllByTextContainingIgnoreCase(searchTextIgnoreCase));
-        articles.addAll(articleRepository.findAllByAuthorContainingIgnoreCase(searchTextIgnoreCase));
-        articles.addAll(articleRepository.findAllByLabelContainingIgnoreCase(searchTextIgnoreCase));
-
-        articles = articles.stream().distinct().collect(Collectors.toList());
-
-        return getSearchArticleDTOS(articles);
-    }
-
-    private static List<SearchArticleDTO> getSearchArticleDTOS(List<Article> articles) {
-        List<SearchArticleDTO> articleDTOs = new ArrayList<>();
-        for (Article article : articles) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy, HH:mm");
-            String createDate = article.getDateCreate().format(formatter);
-            SearchArticleDTO articleDTO = new SearchArticleDTO(
-                    article.getId(),
-                    article.getTitle(),
-                    article.getDescription(),
-                    article.getText(),
-                    article.getAuthor(),
-                    article.getLabel(),
-                    createDate
-            );
-            articleDTOs.add(0, articleDTO);
-        }
-        return articleDTOs;
     }
 }
