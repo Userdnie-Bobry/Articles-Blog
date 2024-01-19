@@ -41,11 +41,11 @@ public class Article {
     @Column(name = "image", length = 500)
     private String image;
 
-    @GenericField
+    @GenericField()
     @Column(name = "date_create", nullable = false, columnDefinition = "timestamp with time zone")
     private LocalDateTime dateCreate;
 
-    @GenericField
+    @GenericField()
     @Column(name = "date_change", columnDefinition = "timestamp with time zone")
     private LocalDateTime dateChange;
 }

@@ -7,10 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.articlesblog.dto.articledto.GetAllArticlesDTO;
 import org.articlesblog.services.article.ArticleService;
 import org.articlesblog.services.hibernatesearch.SearchService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Tag(name = "Main page")
@@ -78,12 +80,31 @@ public class MainController {
 
     @GetMapping("/articles/search")
     @Operation(summary = "Поиск")
-    public String searchArticles(@RequestParam("searchText") String searchText, Model model) {
-        if (searchText.isEmpty()) {
+    public String searchArticles(@RequestParam(value = "searchText") String searchText,
+                                 @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<LocalDateTime> startDate,
+                                 @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<LocalDateTime> endDate,
+                                 Model model) {
+
+        List<GetAllArticlesDTO> articles;
+
+        if (searchText.isEmpty()){
             return "redirect:/articles/page/1";
         }
 
-        List<GetAllArticlesDTO> articles = searchService.searchBy(searchText);
+        if (startDate.isPresent() && endDate.isPresent()) {
+            articles = searchService.searchByQueryAndPeriod(searchText, startDate.get(), endDate.get());
+            log.info("Поиск по периоду");
+        } else if (startDate.isPresent()) {
+            articles = searchService.searchByQueryAndStartDate(searchText, startDate.get());
+            log.info("Поиск c даты");
+        } else if (endDate.isPresent()) {
+            articles = searchService.searchByQueryAndEndDate(searchText, endDate.get());
+            log.info("Поиск до даты");
+        } else {
+            articles = searchService.searchByQuery(searchText);
+            log.info("Поиск без периода");
+        }
+
         model.addAttribute("articles", articles);
         return "articles";
     }

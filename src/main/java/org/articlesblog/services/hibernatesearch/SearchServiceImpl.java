@@ -10,6 +10,7 @@ import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +23,57 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     @Transactional
-    public List<GetAllArticlesDTO> searchBy(String searchQuery) {
+    public List<GetAllArticlesDTO> searchByQuery(String searchQuery) {
         SearchSession searchSession = Search.session(entityManager);
 
         List<Article> articles = searchSession.search(Article.class)
                 .where(f -> f.bool()
                         .must(f.match().fields("title", "description", "text", "author", "label").matching(searchQuery))
-//                        .should(f.match().field("dateCreate").matching(searchQuery))
-//                        .should(f.match().field("dateChange").matching(searchQuery))
+                )
+                .fetchHits(20);
+
+        return convertToSearchArticleDTO(articles);
+    }
+
+    @Override
+    @Transactional
+    public List<GetAllArticlesDTO> searchByQueryAndStartDate(String searchQuery, LocalDateTime startDate) {
+        SearchSession searchSession = Search.session(entityManager);
+
+        List<Article> articles = searchSession.search(Article.class)
+                .where(f -> f.bool()
+                        .must(f.match().fields("title", "description", "text", "author", "label").matching(searchQuery))
+                        .must(f.range().field("dateCreate").greaterThan(startDate))
+                )
+                .fetchHits(20);
+
+        return convertToSearchArticleDTO(articles);
+    }
+
+    @Override
+    @Transactional
+    public List<GetAllArticlesDTO> searchByQueryAndEndDate(String searchQuery, LocalDateTime endDate) {
+        SearchSession searchSession = Search.session(entityManager);
+
+        List<Article> articles = searchSession.search(Article.class)
+                .where(f -> f.bool()
+                        .must(f.match().fields("title", "description", "text", "author", "label").matching(searchQuery))
+                        .must(f.range().field("dateCreate").lessThan(endDate))
+                )
+                .fetchHits(20);
+
+        return convertToSearchArticleDTO(articles);
+    }
+
+    @Override
+    @Transactional
+    public List<GetAllArticlesDTO> searchByQueryAndPeriod(String searchQuery, LocalDateTime startDate, LocalDateTime endDate) {
+        SearchSession searchSession = Search.session(entityManager);
+
+        List<Article> articles = searchSession.search(Article.class)
+                .where(f -> f.bool()
+                        .must(f.match().fields("title", "description", "text", "author", "label").matching(searchQuery))
+                        .must(f.range().field("dateCreate").between(startDate, endDate))
                 )
                 .fetchHits(20);
 

@@ -75,6 +75,7 @@ public class ArticleServiceImpl implements ArticleService{
         article.setText(articleDTO.getText());
         article.setImage(firebaseStorageService.uploadImage(articleDTO.getMultipartFile()));
         article.setDateCreate(LocalDateTime.now());
+        article.setDateChange(LocalDateTime.now());
 
         Article savedArticle = articleRepository.save(article);
         return new EditArticleDTO(savedArticle.getId(), savedArticle.getTitle(), savedArticle.getDescription(), savedArticle.getText(),
