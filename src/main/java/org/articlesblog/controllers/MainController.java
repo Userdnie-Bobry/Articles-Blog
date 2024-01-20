@@ -60,6 +60,7 @@ public class MainController {
         model.addAttribute("title", "Страница " + id + " из " + totalPages);
         model.addAttribute("currentPage", id);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("searched", false);
 
         return "articles";
     }
@@ -87,25 +88,39 @@ public class MainController {
 
         List<GetAllArticlesDTO> articles;
 
-        if (searchText.isEmpty()){
-            return "redirect:/articles/page/1";
+        if (searchText.isEmpty()) {
+            if (startDate.isPresent() && endDate.isPresent()) {
+                articles = searchService.searchByPeriod(startDate.get(), endDate.get());
+                log.info("Поиск только по периоду");
+            } else if (startDate.isPresent()) {
+                articles = searchService.searchByStartDate(startDate.get());
+                log.info("Поиск только c даты");
+            } else if (endDate.isPresent()) {
+                articles = searchService.searchByEndDate(endDate.get());
+                log.info("Поиск только до даты");
+            } else {
+                log.info("всё пусто");
+                return "redirect:/articles/page/1";
+            }
         }
-
-        if (startDate.isPresent() && endDate.isPresent()) {
-            articles = searchService.searchByQueryAndPeriod(searchText, startDate.get(), endDate.get());
-            log.info("Поиск по периоду");
-        } else if (startDate.isPresent()) {
-            articles = searchService.searchByQueryAndStartDate(searchText, startDate.get());
-            log.info("Поиск c даты");
-        } else if (endDate.isPresent()) {
-            articles = searchService.searchByQueryAndEndDate(searchText, endDate.get());
-            log.info("Поиск до даты");
-        } else {
-            articles = searchService.searchByQuery(searchText);
-            log.info("Поиск без периода");
+        else {
+            if (startDate.isPresent() && endDate.isPresent()) {
+                articles = searchService.searchByQueryAndPeriod(searchText, startDate.get(), endDate.get());
+                log.info("Поиск по периоду и строке");
+            } else if (startDate.isPresent()) {
+                articles = searchService.searchByQueryAndStartDate(searchText, startDate.get());
+                log.info("Поиск c даты и строке");
+            } else if (endDate.isPresent()) {
+                articles = searchService.searchByQueryAndEndDate(searchText, endDate.get());
+                log.info("Поиск до даты и строке");
+            } else {
+                articles = searchService.searchByQuery(searchText);
+                log.info("Поиск только по строке");
+            }
         }
 
         model.addAttribute("articles", articles);
+        model.addAttribute("searched", true);
         return "articles";
     }
 }

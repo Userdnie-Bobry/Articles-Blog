@@ -10,4 +10,7 @@ public interface SearchService {
     List<GetAllArticlesDTO> searchByQueryAndStartDate(String searchQuery, LocalDateTime startDate);
     List<GetAllArticlesDTO> searchByQueryAndEndDate(String searchQuery, LocalDateTime endDate);
     List<GetAllArticlesDTO> searchByQueryAndPeriod(String searchQuery, LocalDateTime startDate, LocalDateTime endDate);
+    List<GetAllArticlesDTO> searchByPeriod(LocalDateTime startDate, LocalDateTime endDate);
+    List<GetAllArticlesDTO> searchByStartDate(LocalDateTime startDate);
+    List<GetAllArticlesDTO> searchByEndDate(LocalDateTime endDate);
 }

@@ -80,6 +80,45 @@ public class SearchServiceImpl implements SearchService {
         return convertToSearchArticleDTO(articles);
     }
 
+    @Override
+    public List<GetAllArticlesDTO> searchByPeriod(LocalDateTime startDate, LocalDateTime endDate) {
+        SearchSession searchSession = Search.session(entityManager);
+
+        List<Article> articles = searchSession.search(Article.class)
+                .where(f -> f.bool()
+                        .must(f.range().field("dateCreate").between(startDate, endDate))
+                )
+                .fetchHits(20);
+
+        return convertToSearchArticleDTO(articles);
+    }
+
+    @Override
+    public List<GetAllArticlesDTO> searchByStartDate(LocalDateTime startDate) {
+        SearchSession searchSession = Search.session(entityManager);
+
+        List<Article> articles = searchSession.search(Article.class)
+                .where(f -> f.bool()
+                        .must(f.range().field("dateCreate").greaterThan(startDate))
+                )
+                .fetchHits(20);
+
+        return convertToSearchArticleDTO(articles);
+    }
+
+    @Override
+    public List<GetAllArticlesDTO> searchByEndDate(LocalDateTime endDate) {
+        SearchSession searchSession = Search.session(entityManager);
+
+        List<Article> articles = searchSession.search(Article.class)
+                .where(f -> f.bool()
+                        .must(f.range().field("dateCreate").lessThan(endDate))
+                )
+                .fetchHits(20);
+
+        return convertToSearchArticleDTO(articles);
+    }
+
     private List<GetAllArticlesDTO> convertToSearchArticleDTO(List<Article> articles) {
         List<GetAllArticlesDTO> searchResults = new ArrayList<>();
         for (Article article : articles) {

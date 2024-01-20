@@ -32,7 +32,7 @@
 
         header {
             transform: translate(0, 0px);
-            padding: 20px;
+            padding: 30px;
         }
 
         footer {
@@ -49,7 +49,9 @@
 <body>
 
 <header th:insert="~{blocks/header.html :: header}"></header>
-<div th:replace="~{blocks/page_switcher :: page_switcher}" class="page-switcher"></div>
+<div th:if="${!searched}">
+    <div th:replace="~{blocks/page_switcher :: page_switcher}"></div>
+</div>
 
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
@@ -81,7 +83,9 @@
     </div>
 </div>
 
-<div th:replace="~{blocks/page_switcher :: page_switcher}"></div>
+<div th:if="${!searched}">
+    <div th:replace="~{blocks/page_switcher :: page_switcher}"></div>
+</div>
 <footer th:insert="~{blocks/footer.html :: footer}"></footer>
 
 </body>
