@@ -19,12 +19,12 @@ import java.util.Optional;
 public class ArticleServiceImpl implements ArticleService{
     private final ArticleRepository articleRepository;
     private final FirebaseStorageService firebaseStorageService;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy, HH:mm");
 
     @Override
     public GetArticleDTO getArticle(Integer id) {
         return articleRepository.findById(id)
                 .map(article -> {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy, HH:mm");
                     String createDate = article.getDateCreate().format(formatter);
                     String changeDate = article.getDateChange() != null ? article.getDateChange().format(formatter) : "-";
 
@@ -48,7 +48,6 @@ public class ArticleServiceImpl implements ArticleService{
         List<Article> articles = articleRepository.findAllSortedById();
         List<GetAllArticlesDTO> articleDTOs = new ArrayList<>();
         for (Article article : articles) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy, HH:mm");
             String createDate = article.getDateCreate().format(formatter);
             GetAllArticlesDTO articleDTO = new GetAllArticlesDTO(
                     article.getId(),

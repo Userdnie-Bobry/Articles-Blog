@@ -22,66 +22,46 @@ import java.util.*;
 public class MainController {
     private final ArticleService articleService;
     private final SearchService searchService;
+
     @GetMapping("/")
     @Operation(summary = "Переадресация на главную страницу")
-    public String slashArticles(){
+    public String slashArticles() {
         return "redirect:/articles/page/1";
     }
 
     @GetMapping("/articles")
     @Operation(summary = "Переадресация на главную страницу")
-    public String anotherSlashArticles(){
+    public String anotherSlashArticles() {
         return "redirect:/articles/page/1";
     }
 
     @GetMapping("/articles/page/{id}")
     @Operation(summary = "Получение статей по страницам")
     public String getArticlesByPage(@PathVariable Integer id, Model model) {
-        int pageSize = 9;
         List<GetAllArticlesDTO> articles = articleService.getAllArticles();
 
-        int totalPages = (int) Math.ceil((double) articles.size() / pageSize);
-        int startIndex = (id - 1) * pageSize;
-        int endIndex = Math.min(startIndex + pageSize, articles.size());
-
-        if (id < 1 || id > totalPages) {
-            return "articles";
-        }
-
-        List<GetAllArticlesDTO> articlesOnPage = new ArrayList<>();
-
-        for (int i = endIndex - 1; i >= startIndex; i--) {
-            articlesOnPage.add(articles.get(i));
-        }
-
-        Collections.reverse(articlesOnPage);
-
-        model.addAttribute("articles", articlesOnPage);
-        model.addAttribute("title", "Страница " + id + " из " + totalPages);
-        model.addAttribute("currentPage", id);
-        model.addAttribute("totalPages", totalPages);
         model.addAttribute("searched", false);
-
-        return "articles";
+        return getPages(id, model, articles);
     }
 
     @GetMapping("/auth")
     @Operation(summary = "Страница входа")
-    public String auth(Model model){
+    public String auth(Model model) {
         model.addAttribute("title", "Авторизация");
         return "auth";
     }
 
     @GetMapping("/about")
     @Operation(summary = "О нас")
-    public String about(Model model){
+    public String about(Model model) {
         model.addAttribute("title", "О нас");
         return "about";
     }
 
-    @GetMapping("/articles/search")
+    @GetMapping("/articles/search/page/{id}")
     @Operation(summary = "Поиск")
-    public String searchArticles(@RequestParam(value = "searchText") String searchText,
+    public String searchArticles(@PathVariable Integer id,
+                                 @RequestParam(value = "searchText") String searchText,
                                  @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<LocalDateTime> startDate,
                                  @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<LocalDateTime> endDate,
                                  Model model) {
@@ -102,8 +82,7 @@ public class MainController {
                 log.info("всё пусто");
                 return "redirect:/articles/page/1";
             }
-        }
-        else {
+        } else {
             if (startDate.isPresent() && endDate.isPresent()) {
                 articles = searchService.searchByQueryAndPeriod(searchText, startDate.get(), endDate.get());
                 log.info("Поиск по периоду и строке");
@@ -119,8 +98,36 @@ public class MainController {
             }
         }
 
+        model.addAttribute("searchText", searchText);
+        model.addAttribute("startDate", startDate.orElse(null));
+        model.addAttribute("endDate", endDate.orElse(null));
         model.addAttribute("articles", articles);
         model.addAttribute("searched", true);
+        return getPages(id, model, articles);
+    }
+
+    private String getPages(Integer id, Model model, List<GetAllArticlesDTO> articles) {
+        int pageSize = 9;
+        int totalPages = (int) Math.ceil((double) articles.size() / pageSize);
+        int startIndex = (id - 1) * pageSize;
+        int endIndex = Math.min(startIndex + pageSize, articles.size());
+
+        if (id < 1 || id > totalPages) {
+            return "articles";
+        }
+
+        List<GetAllArticlesDTO> articlesOnPage = new ArrayList<>();
+
+        for (int i = endIndex - 1; i >= startIndex; i--) {
+            articlesOnPage.add(articles.get(i));
+        }
+
+        Collections.reverse(articlesOnPage);
+
+        model.addAttribute("articles", articlesOnPage);
+        model.addAttribute("title", "Страница " + id + " из " + totalPages);
+        model.addAttribute("currentPage", id);
+        model.addAttribute("totalPages", totalPages);
         return "articles";
     }
 }
