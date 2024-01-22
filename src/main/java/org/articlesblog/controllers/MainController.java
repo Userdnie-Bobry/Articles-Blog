@@ -71,26 +71,35 @@ public class MainController {
         if (searchText.isEmpty()) {
             if (startDate.isPresent() && endDate.isPresent()) {
                 articles = searchService.searchByPeriod(startDate.get(), endDate.get());
+                model.addAttribute("startDate", startDate.orElse(null));
+                model.addAttribute("endDate", endDate.orElse(null));
                 log.info("Поиск только по периоду");
             } else if (startDate.isPresent()) {
                 articles = searchService.searchByStartDate(startDate.get());
+                model.addAttribute("startDate", startDate.orElse(null));
                 log.info("Поиск только c даты");
             } else if (endDate.isPresent()) {
                 articles = searchService.searchByEndDate(endDate.get());
+                model.addAttribute("endDate", endDate.orElse(null));
                 log.info("Поиск только до даты");
             } else {
                 log.info("всё пусто");
                 return "redirect:/articles/page/1";
             }
         } else {
+            model.addAttribute("searchText", searchText);
             if (startDate.isPresent() && endDate.isPresent()) {
                 articles = searchService.searchByQueryAndPeriod(searchText, startDate.get(), endDate.get());
+                model.addAttribute("startDate", startDate.orElse(null));
+                model.addAttribute("endDate", endDate.orElse(null));
                 log.info("Поиск по периоду и строке");
             } else if (startDate.isPresent()) {
                 articles = searchService.searchByQueryAndStartDate(searchText, startDate.get());
+                model.addAttribute("startDate", startDate.orElse(null));
                 log.info("Поиск c даты и строке");
             } else if (endDate.isPresent()) {
                 articles = searchService.searchByQueryAndEndDate(searchText, endDate.get());
+                model.addAttribute("endDate", endDate.orElse(null));
                 log.info("Поиск до даты и строке");
             } else {
                 articles = searchService.searchByQuery(searchText);
@@ -98,12 +107,15 @@ public class MainController {
             }
         }
 
-        model.addAttribute("searchText", searchText);
-        model.addAttribute("startDate", startDate.orElse(null));
-        model.addAttribute("endDate", endDate.orElse(null));
-        model.addAttribute("articles", articles);
         model.addAttribute("searched", true);
-        return getPages(id, model, articles);
+
+        if (articles.isEmpty()){
+            return "articles";
+        }
+        else {
+            model.addAttribute("articles", articles);
+            return getPages(id, model, articles);
+        }
     }
 
     private String getPages(Integer id, Model model, List<GetAllArticlesDTO> articles) {
@@ -112,8 +124,13 @@ public class MainController {
         int startIndex = (id - 1) * pageSize;
         int endIndex = Math.min(startIndex + pageSize, articles.size());
 
-        if (id < 1 || id > totalPages) {
-            return "articles";
+        if (id > totalPages) {
+            model.addAttribute("errorMes", "-Максимальная страница: " + totalPages);
+            return "error";
+        }
+        else if (id < 1){
+            model.addAttribute("errorMes", "-Минимальная страница: 1");
+            return "error";
         }
 
         List<GetAllArticlesDTO> articlesOnPage = new ArrayList<>();
