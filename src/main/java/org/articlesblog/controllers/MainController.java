@@ -22,6 +22,7 @@ import java.util.*;
 public class MainController {
     private final ArticleService articleService;
     private final SearchService searchService;
+    private boolean searched;
 
     @GetMapping("/")
     @Operation(summary = "Переадресация на главную страницу")
@@ -41,7 +42,8 @@ public class MainController {
         List<GetAllArticlesDTO> articles = articleService.getAllArticles();
 
         model.addAttribute("searched", false);
-        return getPages(id, model, articles);
+        searched = false;
+        return getPages(id, model, articles, searched);
     }
 
     @GetMapping("/auth")
@@ -108,23 +110,27 @@ public class MainController {
         }
 
         model.addAttribute("searched", true);
+        searched = true;
 
         if (articles.isEmpty()){
             return "articles";
         }
         else {
             model.addAttribute("articles", articles);
-            return getPages(id, model, articles);
+            return getPages(id, model, articles, searched);
         }
     }
 
-    private String getPages(Integer id, Model model, List<GetAllArticlesDTO> articles) {
+    private String getPages(Integer id, Model model, List<GetAllArticlesDTO> articles, boolean searched) {
         int pageSize = 9;
         int totalPages = (int) Math.ceil((double) articles.size() / pageSize);
         int startIndex = (id - 1) * pageSize;
         int endIndex = Math.min(startIndex + pageSize, articles.size());
 
-        if (id > totalPages) {
+        if(articles.isEmpty()){
+            return "articles";
+        }
+        else if (id > totalPages) {
             model.addAttribute("errorMes", "-Максимальная страница: " + totalPages);
             return "error";
         }
@@ -139,7 +145,9 @@ public class MainController {
             articlesOnPage.add(articles.get(i));
         }
 
-        Collections.reverse(articlesOnPage);
+        if (!searched){
+            Collections.reverse(articlesOnPage);
+        }
 
         model.addAttribute("articles", articlesOnPage);
         model.addAttribute("title", "Страница " + id + " из " + totalPages);

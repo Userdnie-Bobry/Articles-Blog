@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "articles")
+//@Indexed(index = "src/main/resources/lucene/indexes")
 @Indexed
 @Data
 public class Article {
