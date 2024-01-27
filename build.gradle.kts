@@ -22,6 +22,8 @@ repositories {
 }
 
 dependencies {
+	implementation("org.springframework.boot:spring-boot-maven-plugin:3.2.2")
+
 	implementation("org.springframework.boot:spring-boot-docker-compose")
 
 	implementation("org.hibernate.search:hibernate-search-mapper-orm:7.1.0.Alpha1")
