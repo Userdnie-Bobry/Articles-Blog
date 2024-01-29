@@ -1,23 +1,31 @@
 package org.articlesblog.config;
 
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
+import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 
-@Configuration
+@Getter
 public class FirebaseConfig {
-//    @Bean
-//    public FirebaseApp firebaseApp() throws IOException {
-//        FileInputStream serviceAccount = new FileInputStream("C:\\Users\\dayof\\IdeaProjects\\articlesBlog\\src\\main\\resources\\articles-blog-4e455-firebase-adminsdk-i5atk-6cfc9f06e2.json");
-//        FirebaseOptions options = new FirebaseOptions.Builder()
-//                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-//                .build();
-//        return FirebaseApp.initializeApp(options);
-//    }
-}
+    private static final String FILE_NAME = "articles-b1def-firebase-adminsdk-e85q5-51852b2062.json";
 
+    private Storage storage;
+
+    public FirebaseConfig() throws IOException {
+        init();
+    }
+
+    @PostConstruct
+    public void init() throws IOException {
+        FileInputStream serviceAccount = new FileInputStream(FILE_NAME);
+
+        storage = StorageOptions.newBuilder()
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .build()
+                .getService();
+    }
+}
