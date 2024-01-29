@@ -59,7 +59,7 @@ public class ArticleServiceImpl implements ArticleService{
                     article.getDescription(),
                     createDate
             );
-            articleDTOs.add(0, articleDTO);
+            articleDTOs.add(0,articleDTO);
         }
         return articleDTOs;
     }

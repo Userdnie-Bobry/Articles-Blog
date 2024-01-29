@@ -2,6 +2,7 @@ package org.articlesblog.jpa.repository;
 
 import org.articlesblog.jpa.entity.Article;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -37,10 +37,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler) throws Exception {
         return http.authorizeHttpRequests(authorise ->
                         authorise
-                                .requestMatchers("/static/**", "/templates/**")
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated())
+                                .requestMatchers("/articles/new/**")
+                                .hasAnyRole("Admin", "Moderator", "User")
+                                .requestMatchers("/articles/delete/").hasAnyRole("Admin", "Moderator", "User")
+                                .requestMatchers("/articles/edit/**").hasAnyRole("Admin", "Moderator", "User")
+                                .requestMatchers("/**").permitAll())
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(authorise -> authorise.accessDeniedPage("/access-denied"))
                 .oauth2Login(withDefaults())

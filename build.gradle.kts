@@ -2,13 +2,13 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.2.0"
 	id("io.spring.dependency-management") version "1.1.4"
+    kotlin("jvm")
 }
 
 group = "org"
 version = "0.0.1-SNAPSHOT"
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_17
 }
 
 configurations {
@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-docker-compose")
+
 	implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
 
 	implementation("com.google.firebase:firebase-admin:9.2.0")
@@ -41,9 +41,13 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client:3.2.0")
 	implementation ("org.keycloak:keycloak-admin-client:22.0.1")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation(kotlin("stdlib-jdk8"))
 
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+kotlin {
+    jvmToolchain(17)
 }

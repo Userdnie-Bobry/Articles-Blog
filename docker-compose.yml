@@ -1,50 +1,58 @@
 version: '3'
 services:
-  database:
-    image: 'postgres:15.5'
+  site-postgres:
+    image: library/postgres:${KC_POSTGRES_IMAGE_TAG:-14}
+    container_name: ${POSTGRES_CONTAINER_NAME:-postgres-site}
+    restart: on-failure
     environment:
-      - 'POSTGRES_USER=postgres'
-      - 'POSTGRES_DB=books'
-      - 'POSTGRES_PASSWORD=root'
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    healthcheck:
+      test: pg_isready -d postgres
+      interval: 10s
+      timeout: 5s
+      retries: 3
     ports:
-      - '5432'
+      - ${KC_POSTGRES_PORT_MAPPING:-5436}:5432
+    deploy:
+      resources:
+        limits:
+          memory: 256M
 
   postgres:
-      image: postgres
-      volumes:
-        - postgres_data:/var/lib/postgresql/data
-      environment:
-        POSTGRES_DB: keycloakdb
-        POSTGRES_USER: keycloakuser
-        POSTGRES_PASSWORD: keycloakpass
-      networks:
-        - keycloak-network
-      ports:
-        - '5432'
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloakdb
+      POSTGRES_USER: keycloakuser
+      POSTGRES_PASSWORD: keycloakpass
+    networks:
+      - keycloak-network
 
-  keycloak_2:
-      image: jboss/keycloak:16.1.1
-      ports:
-        - 8383:8080
-      environment:
-        DB_VENDOR: POSTGRES
-        DB_ADDR: postgres
-        DB_DATABASE: keycloakdb
-        DB_SCHEMA: public
-        DB_USER: keycloakuser
-        DB_PASSWORD: keycloakpass
-        KEYCLOAK_USER: admin
-        KEYCLOAK_PASSWORD: adminpass
-
-      networks:
-        - keycloak-network
-      depends_on:
-        - postgres
+  keycloak:
+    image: jboss/keycloak:16.1.1
+    ports:
+      - 8383:8080
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: keycloakdb
+      DB_SCHEMA: public
+      DB_USER: keycloakuser
+      DB_PASSWORD: keycloakpass
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: adminpass
+    networks:
+      - keycloak-network
+    depends_on:
+      - postgres
 
 networks:
-    keycloak-network:
-      driver: bridge
+  keycloak-network:
+    driver: bridge
 
 volumes:
-    postgres_data:
-      driver: local
+  postgres_data:
+    driver: local

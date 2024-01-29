@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.articlesblog.dto.EditArticleDTO;
 import org.articlesblog.dto.GetArticleDTO;
 import org.articlesblog.services.article.ArticleService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ public class UIController {
 
     @GetMapping("/articles/{id}")
     @Operation(summary = "Получение данных статьи по id")
+    @PreAuthorize("permitAll()")
     public String getArticle(@PathVariable Integer id, Model model) {
         GetArticleDTO article = articleService.getArticle(id);
         model.addAttribute("article", article);
