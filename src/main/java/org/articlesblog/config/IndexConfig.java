@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 public class IndexConfig implements ApplicationListener<ApplicationReadyEvent> {
-
     private final IndexInit indexInit;
 
     @Override

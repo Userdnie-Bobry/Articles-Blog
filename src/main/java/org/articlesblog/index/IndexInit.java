@@ -19,14 +19,13 @@ public class IndexInit {
     private final EntityManagerFactory entityManagerFactory;
 
     public void initiateIndexing() {
-        log.info("Initiating indexing...");
-
+        log.info("Инициируется индексация...");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try (entityManager) {
             SearchSession searchSession = Search.session(entityManager);
             MassIndexer indexer = searchSession.massIndexer(Article.class);
             indexer.start();
-            log.info("Entities indexed");
+            log.info("Сущности проиндексированы");
         }
     }
 }

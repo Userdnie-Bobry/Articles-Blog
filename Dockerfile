@@ -1,4 +1,6 @@
 FROM openjdk:17.0.2-slim
-COPY build/libs/*-SNAPSHOT.jar app.jar
-EXPOSE 8080
+COPY ["./", "/source"]
+WORKDIR /source
+RUN /source/gradlew bootJar
+COPY ["./build/libs/*", "app.jar"]
 ENTRYPOINT ["java","-jar","app.jar"]

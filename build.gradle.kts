@@ -22,10 +22,6 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-maven-plugin:3.2.2")
-
-	implementation("org.springframework.boot:spring-boot-docker-compose")
-
 	implementation("org.hibernate.search:hibernate-search-mapper-orm:7.1.0.Alpha1")
 	implementation("org.hibernate.search:hibernate-search-backend-lucene:7.1.0.Alpha1")
 	implementation("org.hibernate.orm:hibernate-core:6.4.2.Final")
@@ -33,8 +29,9 @@ dependencies {
 	implementation("com.google.firebase:firebase-admin:9.2.0")
 	implementation("net.coobird:thumbnailator:0.4.20")
 
-	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.1.3")
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.2.2")
 
+	implementation("org.springframework.boot:spring-boot-maven-plugin:3.2.2")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")

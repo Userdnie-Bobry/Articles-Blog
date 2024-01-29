@@ -43,7 +43,7 @@ public class MainController {
 
         model.addAttribute("searched", false);
         searched = false;
-        return getPages(id, model, articles, searched);
+        return getPages(id, model, articles, false);
     }
 
     @GetMapping("/auth")
