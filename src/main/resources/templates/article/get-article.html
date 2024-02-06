@@ -10,6 +10,15 @@
     <title th:text="${title}"></title>
 
     <style>
+        .fade-in {
+           opacity: 0;
+           transition: opacity 1s ease-in-out;
+       }
+
+       .fade-in.loaded {
+           opacity: 1;
+       }
+
         @media (min-width: 768px) {
         }
 
@@ -59,7 +68,7 @@
 <header th:insert="~{blocks/header.html :: header}"></header>
 
 <div class="py-5 centered-content mt-md-0">
-    <img th:src="${article.image}" class="bd-placeholder-img card-img-top" alt="Изображение статьи"><br>
+    <img th:src="${article.image}" class="fade-in bd-placeholder-img card-img-top" onload="this.classList.add('loaded')"><br>
     <p><strong>Дата создания:</strong> <span th:text="${article.dateCreate}" class="underline"></span></p>
     <p><strong>Дата изменения:</strong> <span th:text="${article.dateChange}" class="underline"></span></p>
     <p><strong>Метка:</strong> <span th:text="${article.label}" class="underline"></span></p>
