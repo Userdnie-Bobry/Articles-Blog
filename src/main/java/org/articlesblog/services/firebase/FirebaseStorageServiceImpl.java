@@ -2,13 +2,13 @@ package org.articlesblog.services.firebase;
 
 import com.google.cloud.storage.*;
 
-import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.geometry.Positions;
-
 import org.articlesblog.config.FirebaseConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import java.net.URLEncoder;
@@ -38,10 +38,20 @@ public class FirebaseStorageServiceImpl implements FirebaseStorageService {
                 Path path = Paths.get(fileName);
                 Files.copy(file.getInputStream(), path);
 
-                Thumbnails.of(path.toFile())
-                        .crop(Positions.CENTER)
-                        .size(660, 360)
-                        .toFile(path.toFile());
+                BufferedImage originalImage = ImageIO.read(path.toFile());
+
+                int width = 660;
+                int height = (int) (originalImage.getHeight() * ((double) width / originalImage.getWidth()));
+
+                BufferedImage resizedImage = new BufferedImage(width, height, originalImage.getType());
+
+                Graphics2D g2d = resizedImage.createGraphics();
+                g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+                g2d.drawImage(originalImage, 0, 0, width, height, null);
+                g2d.dispose();
+
+                ImageIO.write(resizedImage, "jpg", path.toFile());
 
                 BlobId blobId = BlobId.of(BUCKET_NAME, fileName);
                 BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.getContentType()).build();
@@ -50,14 +60,14 @@ public class FirebaseStorageServiceImpl implements FirebaseStorageService {
 
                 return "https://firebasestorage.googleapis.com/v0/b/" + blob.getBucket() + "/o/" +
                         encodeURIComponent(blob.getName()) + "?alt=media&token=" + UUID.randomUUID();
-            }
-            else {
+            } else {
                 return IMAGE_NAME;
             }
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload image", e);
         }
     }
+
 
     @Override
     public String updateImage(String id, MultipartFile file) {
