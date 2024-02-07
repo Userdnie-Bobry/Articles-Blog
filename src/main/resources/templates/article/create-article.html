@@ -95,7 +95,7 @@
             <textarea id="text" name="text" required></textarea>
         </strong></p>
         <p><strong>
-            <label for="multipartFile">Загрузить изображение (300x165, до 10 Мбайт): </label><br>
+            <label for="multipartFile">Загрузить изображение (300x165, до 1 Мбайт): </label><br>
             <input type="file" id="multipartFile" name="multipartFile" accept="image/*" onchange="previewImage()" style="display: none;">
             <label for="multipartFile" style="cursor: pointer; color: blue; text-decoration: underline;">Выберите файл</label>
         </strong></p>
@@ -108,6 +108,17 @@
 
 <script>
     function submitForm() {
+        const labelInput = document.getElementById('label');
+        const authorInput = document.getElementById('author');
+        const titleInput = document.getElementById('title');
+        const descriptionInput = document.getElementById('description');
+        const textInput = document.getElementById('text');
+
+        if (labelInput.value === '' || authorInput.value === '' || titleInput.value === '' || descriptionInput.value === '' || textInput.value === '') {
+            alert('Пожалуйста, заполните все поля.');
+            return;
+        }
+
         const form = document.getElementById('articleForm');
         const formData = new FormData(form);
 
@@ -132,11 +143,11 @@
         const file = document.querySelector('input[type=file]').files[0];
         const reader = new FileReader();
 
-        var fileSize = file.size;
-        var maxSize = 1048576;
+        const fileSize = file.size;
+        const maxSize = 5242880;
 
         if (fileSize > maxSize) {
-          alert("Размер файла превышает 1 мегабайт. Пожалуйста, выберите файл меньшего размера.");
+          alert("Размер файла превышает 5 мегабайт. Пожалуйста, выберите файл меньшего размера.");
           event.target.value = "";
         }
         else {
