@@ -128,14 +128,23 @@
         const file = document.querySelector('input[type=file]').files[0];
         const reader = new FileReader();
 
-        reader.onloadend = function () {
-            const img = document.createElement('img');
-            img.src = reader.result.toString();
-            preview.innerHTML = '';
-            preview.appendChild(img);
+        var fileSize = file.size;
+        var maxSize = 1048576;
+
+        if (fileSize > maxSize) {
+          alert("Размер файла превышает 1 мегабайт. Пожалуйста, выберите файл меньшего размера.");
+          event.target.value = "";
         }
-        if (file) {
-            reader.readAsDataURL(file);
+        else {
+            reader.onloadend = function () {
+                const img = document.createElement('img');
+                img.src = reader.result.toString();
+                preview.innerHTML = '';
+                preview.appendChild(img);
+            }
+            if (file) {
+                reader.readAsDataURL(file);
+            }
         }
     }
 </script>

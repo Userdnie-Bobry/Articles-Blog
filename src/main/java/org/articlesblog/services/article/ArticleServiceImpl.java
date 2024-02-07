@@ -86,12 +86,18 @@ public class ArticleServiceImpl implements ArticleService{
     public EditArticleDTO editArticle(Integer id, CreateArticleDTO articleDTO) {
         Article article = articleRepository.findById(id)
                 .map(existingArticle -> {
+                    String imageURL = existingArticle.getImage();
+
+                    if (!articleDTO.getMultipartFile().isEmpty()) {
+                        imageURL = firebaseStorageService.updateImage(existingArticle.getImage(), articleDTO.getMultipartFile());
+                    }
+
                     existingArticle.setTitle(articleDTO.getTitle());
                     existingArticle.setDescription(articleDTO.getDescription());
                     existingArticle.setAuthor(articleDTO.getAuthor());
                     existingArticle.setLabel(articleDTO.getLabel());
                     existingArticle.setText(articleDTO.getText());
-                    existingArticle.setImage(firebaseStorageService.updateImage(existingArticle.getImage(), articleDTO.getMultipartFile()));
+                    existingArticle.setImage(imageURL);
                     existingArticle.setDateChange(LocalDateTime.now());
 
                     return articleRepository.save(existingArticle);
