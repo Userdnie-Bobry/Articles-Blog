@@ -3,7 +3,7 @@ package org.articlesblog.config;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.articlesblog.index.IndexInit;
+import org.articlesblog.services.hibernatesearch.IndexServiceImpl;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 public class IndexConfig implements ApplicationListener<ApplicationReadyEvent> {
-    private final IndexInit indexInit;
+    private final IndexServiceImpl indexServiceImpl;
 
     @Override
     public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
-        indexInit.initiateIndexing();
+        indexServiceImpl.initiateIndexing();
     }
 }

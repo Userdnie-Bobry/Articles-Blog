@@ -1,4 +1,4 @@
-package org.articlesblog.index;
+package org.articlesblog.services.hibernatesearch;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
-public class IndexInit {
+public class IndexServiceImpl implements IndexService{
     private final EntityManagerFactory entityManagerFactory;
 
     public void initiateIndexing() {

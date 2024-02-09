@@ -15,26 +15,14 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Tag(name = "Main page")
+@Tag(name = "Pagination")
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-public class MainController {
+public class PaginationController {
     private final ArticleService articleService;
     private final SearchService searchService;
     private boolean searched;
-
-    @GetMapping("/")
-    @Operation(summary = "Переадресация на главную страницу")
-    public String slashArticles() {
-        return "redirect:/articles/page/1";
-    }
-
-    @GetMapping("/articles")
-    @Operation(summary = "Переадресация на главную страницу")
-    public String anotherSlashArticles() {
-        return "redirect:/articles/page/1";
-    }
 
     @GetMapping("/articles/page/{id}")
     @Operation(summary = "Получение статей по страницам")
@@ -44,20 +32,6 @@ public class MainController {
         model.addAttribute("searched", false);
         searched = false;
         return getPages(id, model, articles, false);
-    }
-
-    @GetMapping("/auth")
-    @Operation(summary = "Страница входа")
-    public String auth(Model model) {
-        model.addAttribute("title", "Авторизация");
-        return "auth";
-    }
-
-    @GetMapping("/about")
-    @Operation(summary = "О нас")
-    public String about(Model model) {
-        model.addAttribute("title", "О нас");
-        return "about";
     }
 
     @GetMapping("/articles/search/page/{id}")
