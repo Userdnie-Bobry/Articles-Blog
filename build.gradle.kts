@@ -22,8 +22,6 @@ repositories {
 }
 
 dependencies {
-	implementation("org.apache.httpcomponents.client5:httpclient5")
-
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0")
 	implementation("org.hibernate.search:hibernate-search-mapper-orm:7.1.0.Alpha1")
 	implementation("org.hibernate.search:hibernate-search-backend-lucene:7.1.0.Alpha1")
