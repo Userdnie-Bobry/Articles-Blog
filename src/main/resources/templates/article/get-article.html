@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
@@ -19,7 +20,7 @@
 
     <div class="centered-content">
         <div class="form">
-            <h1> " <span th:text="${article.title}"></span> " </h1>
+            <h1 class="h1__withLine"> " <span th:text="${article.title}"></span> " </h1>
                 <div class="form-box">
                     <div class="text__get-article">
                         <p><strong>Дата создания:</strong> <span th:text="${article.dateCreate}" ></span></p>
@@ -39,14 +40,15 @@
                     </div>
                 </div>
 
-                <h1></h1>
+                <h1 class="h1__withLine"></h1>
 
                 <h2>Текст статьи:</h2>
 
-                <div class="article-text_get-article">
-                    <p><span th:text="${article.text}"></span></p>
+                <div class="container">
+                    <div class="col-sm-12 mt-5">
+                        <div id="imageArticles" th:utext="${article.text}">Text</div>
+                    </div>
                 </div>
-
             <form id="articleFormDelete" th:action="@{/articles/delete/{id}(id=${article.id})}" method="POST" th:object="${article}">
                 <button type="button" onclick="submitForm()" class="btn btn-outline-danger">Удалить статью</button>
                 <a th:href="@{/articles/edit/{id}(id=${article.id})}">

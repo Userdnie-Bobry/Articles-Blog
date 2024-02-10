@@ -13,18 +13,9 @@
             flex-direction: column;
         }
 
-        h1 {
-            text-align: center;
-            padding-bottom: 30px;
-            margin-top: 0px;
-            margin-bottom: 40px;
-            font-size: 40px;
-            border-bottom: 1px solid rgb(159, 159, 159);
-        }
-
         textarea {
             width: 100%;
-            height: 200px;
+            height: 150px;
             padding: 15px;
             outline: none;
             resize: none;
@@ -45,6 +36,19 @@
            color: white;
            background-color: #212529;
            margin-top: 20px;
+       }
+
+/* create-article.html */
+/* edit-article.html */
+/* get-article.html */
+/* about.html */
+       .h1__withLine{
+            text-align: center;
+            padding-bottom: 30px;
+            margin-top: 0px;
+            margin-bottom: 40px;
+            font-size: 40px;
+            border-bottom: 1px solid rgb(159, 159, 159);
        }
 
 /* create-article.html */
@@ -237,6 +241,21 @@
              opacity: 1;
         }
 
+/* get-article.html */
+        #imageArticles {
+            padding-right: 32px;
+            width: 70%;
+        }
+
+/* get-article.html */
+#imageArticles img {
+            margin-left: 25%;
+            margin-right: 25%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
 /* articles.html */
          #imagePreviewArticles {
             height: 210px;
@@ -252,7 +271,7 @@
 /* create-article.html */
 /* edit-article.html */
 /* articles.html */
-        #imagePreview img, #imagePreviewArticles img {
+        #imagePreview img, #imagePreviewArticles img{
             width: 100%;
             height: 100%;
             object-fit: cover;

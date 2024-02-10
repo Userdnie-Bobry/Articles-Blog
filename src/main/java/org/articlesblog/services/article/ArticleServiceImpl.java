@@ -8,6 +8,10 @@ import org.articlesblog.services.firebase.FirebaseStorageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -71,7 +75,7 @@ public class ArticleServiceImpl implements ArticleService{
         article.setDescription(articleDTO.getDescription());
         article.setAuthor(articleDTO.getAuthor());
         article.setLabel(articleDTO.getLabel());
-        article.setText(articleDTO.getText());
+        article.setText(markdownToHTML(articleDTO.getText()));
         article.setImage(firebaseStorageService.uploadImage(articleDTO.getMultipartFile()));
         article.setDateCreate(LocalDateTime.now());
         article.setDateChange(LocalDateTime.now());
@@ -96,7 +100,7 @@ public class ArticleServiceImpl implements ArticleService{
                     existingArticle.setDescription(articleDTO.getDescription());
                     existingArticle.setAuthor(articleDTO.getAuthor());
                     existingArticle.setLabel(articleDTO.getLabel());
-                    existingArticle.setText(articleDTO.getText());
+                    existingArticle.setText(markdownToHTML(articleDTO.getText()));
                     existingArticle.setImage(imageURL);
                     existingArticle.setDateChange(LocalDateTime.now());
 
@@ -122,5 +126,16 @@ public class ArticleServiceImpl implements ArticleService{
             }
             return "Статья " + id + " удалена";
         }).orElse("Статья не найдена");
+    }
+
+    private String markdownToHTML(String markdown) {
+        Parser parser = Parser.builder()
+                .build();
+
+        Node document = parser.parse(markdown);
+        HtmlRenderer renderer = HtmlRenderer.builder()
+                .build();
+
+        return renderer.render(document);
     }
 }

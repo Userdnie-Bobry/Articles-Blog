@@ -28,6 +28,8 @@ dependencies {
 
 	implementation("com.google.firebase:firebase-admin:9.2.0")
 
+	implementation("com.atlassian.commonmark:commonmark:0.17.0")
+
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.2.2")
 
 	implementation("org.springframework.boot:spring-boot-maven-plugin:3.2.2")
