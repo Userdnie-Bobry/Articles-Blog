@@ -32,8 +32,7 @@ public class ArticleServiceImpl implements ArticleService{
                     String createDate = article.getDateCreate().format(formatter);
                     String changeDate = article.getDateChange() != null ? article.getDateChange().format(formatter) : "-";
 
-
-                    return new GetArticleDTO(article.getId(), article.getTitle(), article.getText(),
+                    return new GetArticleDTO(article.getId(), article.getTitle(), markdownToHTML(article.getText()),
                             article.getAuthor(),  article.getLabel(), createDate, changeDate, article.getImage());
                 })
                 .orElse(null);
@@ -75,7 +74,7 @@ public class ArticleServiceImpl implements ArticleService{
         article.setDescription(articleDTO.getDescription());
         article.setAuthor(articleDTO.getAuthor());
         article.setLabel(articleDTO.getLabel());
-        article.setText(markdownToHTML(articleDTO.getText()));
+        article.setText(articleDTO.getText());
         article.setImage(firebaseStorageService.uploadImage(articleDTO.getMultipartFile()));
         article.setDateCreate(LocalDateTime.now());
         article.setDateChange(LocalDateTime.now());
@@ -100,7 +99,7 @@ public class ArticleServiceImpl implements ArticleService{
                     existingArticle.setDescription(articleDTO.getDescription());
                     existingArticle.setAuthor(articleDTO.getAuthor());
                     existingArticle.setLabel(articleDTO.getLabel());
-                    existingArticle.setText(markdownToHTML(articleDTO.getText()));
+                    existingArticle.setText(articleDTO.getText());
                     existingArticle.setImage(imageURL);
                     existingArticle.setDateChange(LocalDateTime.now());
 

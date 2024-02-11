@@ -16,63 +16,69 @@
 </head>
 
 <body>
+<div class="transform">
     <header th:insert="~{blocks/header.html :: header}"></header>
+</div>
 
-    <div class="centered-content">
-        <form class="form" id="articleForm">
-            <h1 class="h1__withLine"> Создание статьи </h1>
-                <div class="form-box">
-                    <div class="form-box__text">
-                        <div class="text-field">
-                            <input class="text-field__inp" type="text" id="label" name="label" required>
-                            <label class="text-field__placeholder" for="label">Метка:</label>
-                        </div>
 
-                        <div class="text-field">
-                            <input class="text-field__inp" type="text" id="author" name="author" required>
-                            <label class="text-field__placeholder" for="author">Автор:</label>
-                        </div>
-
-                        <div class="text-field">
-                            <input class="text-field__inp" type="text" id="title" name="title" required>
-                            <label class="text-field__placeholder" for="title">Название:</label>
-                        </div>
-                    </div>
-
-                    <div class="form-box__image">
-                        <div id="imagePreview"></div><br>
-                        <input type="file" id="multipartFile" name="multipartFile" accept="image/*" onchange="previewImage()" style="display: none;">
-                        <label for="multipartFile" style="cursor: pointer; color: blue; text-decoration: underline;">Загрузить изображение (до 1 Мбайт):</label>
-                    </div>
+<div class="centered-content">
+    <form class="form" id="articleForm">
+        <h1 class="h1__withLine"> Создание статьи </h1>
+        <div class="form-box">
+            <div class="form-box__text">
+                <div class="text-field">
+                    <input class="text-field__inp" type="text" id="label" name="label" required>
+                    <label class="text-field__placeholder" for="label">Метка:</label>
                 </div>
 
-            <div class="text-field">
-                <div>
-                    <label class="text-field__area" for="description">Краткое описание:</label>
-                    <textarea id="description" name="description" required></textarea>
+                <div class="text-field">
+                    <input class="text-field__inp" type="text" id="author" name="author" required>
+                    <label class="text-field__placeholder" for="author">Автор:</label>
                 </div>
 
-                <div>
-                    <label class="text-field__area" for="text">Текст статьи:</label>
-                    <textarea id="text" name="text" autocomplete="off" required></textarea>
+                <div class="text-field">
+                    <input class="text-field__inp" type="text" id="title" name="title" required>
+                    <label class="text-field__placeholder" for="title">Название:</label>
                 </div>
             </div>
 
-            <button type="button" onclick="submitForm()" class="btn btn-outline-success">Создать статью</button>
-            <button type="submit" class="btn btn-outline-primary">Сгенерировать статью</button>
-        </form>
-    </div>
+            <div class="form-box__image">
+                <div id="imagePreview"></div>
+                <br>
+                <input type="file" id="multipartFile" name="multipartFile" accept="image/*" onchange="previewImage()"
+                       style="display: none;">
+                <label for="multipartFile" style="cursor: pointer; color: blue; text-decoration: underline;">Загрузить
+                    изображение (до 1 Мбайт):</label>
+            </div>
+        </div>
 
-    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
-    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-    <script th:src="@{/assets/simplemde/simplemde.min.js}"></script>
+        <div class="text-field">
+            <div>
+                <label class="text-field__area" for="description">Краткое описание:</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
 
-    <script>
-        var simplemde = new SimpleMDE({element: document.getElementById("text")});
-    </script>
+            <div>
+                <label class="text-field__area" for="text">Текст статьи:</label>
+                <textarea id="text" name="text" autocomplete="off" required></textarea>
+            </div>
+        </div>
 
-    <script>
+        <button type="button" onclick="submitForm()" class="btn btn-outline-success">Создать статью</button>
+        <button type="submit" class="btn btn-outline-primary">Сгенерировать статью</button>
+    </form>
+</div>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/simplemde/simplemde.min.js}"></script>
+
+<script>
+    const simplemde = new SimpleMDE({element: document.getElementById("text")});
+</script>
+
+<script>
     function submitForm() {
         const labelInput = document.getElementById('label');
         const authorInput = document.getElementById('author');
@@ -81,7 +87,7 @@
         const textValue = simplemde.value();
 
         if (labelInput.value === '' || authorInput.value === '' || titleInput.value === '' || descriptionInput.value === '' || textValue === '') {
-                alert('Пожалуйста, заполните все поля.');
+            alert('Пожалуйста, заполните все поля.');
             return;
         }
 
@@ -116,10 +122,9 @@
         const maxSize = 5242880;
 
         if (fileSize > maxSize) {
-          alert("Размер файла превышает 5 мегабайт. Пожалуйста, выберите файл меньшего размера.");
-          event.target.value = "";
-        }
-        else {
+            alert("Размер файла превышает 5 мегабайт. Пожалуйста, выберите файл меньшего размера.");
+            event.target.value = "";
+        } else {
             reader.onloadend = function () {
                 const img = document.createElement('img');
                 img.src = reader.result.toString();
@@ -134,7 +139,7 @@
         }
     }
 
-    function submitFormGenerate(){
+    function submitFormGenerate() {
         if (document.getElementById('label').value.trim() === '') {
             document.getElementById('label').style.border = '2px solid red';
         } else {
@@ -154,10 +159,14 @@
         }
     }
 
-    document.querySelector('.my-custom-button-generate').addEventListener('click', submitFormGenerate);
-    </script>
+    function delHeader() {
+        document.getElementById('header').remove();
+    }
 
-    <footer th:insert="~{blocks/footer.html :: footer}"></footer>
+    document.querySelector('.my-custom-button-generate').addEventListener('click', submitFormGenerate);
+</script>
+
+<footer th:insert="~{blocks/footer.html :: footer}"></footer>
 </body>
 
 </html>

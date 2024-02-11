@@ -16,121 +16,125 @@
 </head>
 
 <body>
+<div class="transform">
     <header th:insert="~{blocks/header.html :: header}"></header>
+</div>
 
-    <div class="centered-content">
-        <form class="form" id="articleForm" th:action="@{/articles/edit/{id}(id=${article.id})}" method="POST" th:object="${article}">
-            <h1 class="h1__withLine"> Изменение статьи </h1>
-                <div class="form-box">
-                    <div class="form-box__text">
-                        <div class="text-field">
-                            <input class="text-field__inp" type="text" id="label" name="label" th:field="*{label}" required>
-                            <label class="text-field__placeholder" for="label">Метка:</label>
-                        </div>
-
-                        <div class="text-field">
-                            <input class="text-field__inp" type="text" id="author" name="author" th:field="*{author}" required>
-                            <label class="text-field__placeholder" for="author">Автор:</label>
-                        </div>
-
-                        <div class="text-field">
-                            <input class="text-field__inp" type="text" id="title" name="title" th:field="*{title}" required>
-                            <label class="text-field__placeholder" for="title">Название:</label>
-                        </div>
-                    </div>
-
-                    <div class="form-box__image">
-                        <div id="imagePreview">
-                            <img th:src="${article.image}">
-                        </div>
-                        <input type="file" id="multipartFile" name="multipartFile" accept="image/*" onchange="previewImage()" style="display: none;">
-                        <label for="multipartFile" style="cursor: pointer; color: blue; text-decoration: underline;">Загрузить изображение (до 1 Мбайт):</label>
-                    </div>
+<div class="centered-content">
+    <form class="form" id="articleForm" th:action="@{/articles/edit/{id}(id=${article.id})}" method="POST"
+          th:object="${article}">
+        <h1 class="h1__withLine"> Изменение статьи </h1>
+        <div class="form-box">
+            <div class="form-box__text">
+                <div class="text-field">
+                    <input class="text-field__inp" type="text" id="label" name="label" th:field="*{label}" required>
+                    <label class="text-field__placeholder" for="label">Метка:</label>
                 </div>
 
-            <div class="text-field">
-                <div>
-                    <label class="text-field__area" for="description">Краткое описание:</label>
-                    <textarea id="description" name="description" required th:field="*{description}"></textarea>
+                <div class="text-field">
+                    <input class="text-field__inp" type="text" id="author" name="author" th:field="*{author}" required>
+                    <label class="text-field__placeholder" for="author">Автор:</label>
                 </div>
 
-                <div>
-                    <label class="text-field__area" for="text">Текст статьи:</label>
-                    <textarea id="text" name="text" required th:field="*{text}"></textarea>
+                <div class="text-field">
+                    <input class="text-field__inp" type="text" id="title" name="title" th:field="*{title}" required>
+                    <label class="text-field__placeholder" for="title">Название:</label>
                 </div>
             </div>
 
-            <button type="button" onclick="submitForm()" class="btn btn-outline-success">Обновить статью</button>
-        </form>
-    </div>
+            <div class="form-box__image">
+                <div id="imagePreview">
+                    <img th:src="${article.image}">
+                </div>
+                <input type="file" id="multipartFile" name="multipartFile" accept="image/*" onchange="previewImage()"
+                       style="display: none;">
+                <label for="multipartFile" style="cursor: pointer; color: blue; text-decoration: underline;">Загрузить
+                    изображение (до 1 Мбайт):</label>
+            </div>
+        </div>
 
-    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
-    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-    <script th:src="@{/assets/simplemde/simplemde.min.js}"></script>
+        <div class="text-field">
+            <div>
+                <label class="text-field__area" for="description">Краткое описание:</label>
+                <textarea id="description" name="description" required th:field="*{description}"></textarea>
+            </div>
 
-    <script>
-        var simplemde = new SimpleMDE({element: document.getElementById("text")});
-    </script>
+            <div>
+                <label class="text-field__area" for="text">Текст статьи:</label>
+                <textarea id="text" name="text" required th:field="*{text}"></textarea>
+            </div>
+        </div>
 
-    <script>
-        function submitForm() {
-            const labelInput = document.getElementById('label');
-            const authorInput = document.getElementById('author');
-            const titleInput = document.getElementById('title');
-            const descriptionInput = document.getElementById('description');
-            const textValue = simplemde.value();
+        <button type="button" onclick="submitForm()" class="btn btn-outline-success">Обновить статью</button>
+    </form>
+</div>
 
-            if (labelInput.value === '' || authorInput.value === '' || titleInput.value === '' || descriptionInput.value === '' || textValue === '') {
-                    alert('Пожалуйста, заполните все поля.');
-                return;
-            }
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/simplemde/simplemde.min.js}"></script>
 
-            const form = document.getElementById('articleForm');
-            const formData = new FormData(form);
+<script>
+    const simplemde = new SimpleMDE({element: document.getElementById("text")});
+</script>
 
-            formData.set('text', textValue);
-            formData.append('multipartFile', formData.get('image'));
+<script>
+    function submitForm() {
+        const labelInput = document.getElementById('label');
+        const authorInput = document.getElementById('author');
+        const titleInput = document.getElementById('title');
+        const descriptionInput = document.getElementById('description');
+        const textValue = simplemde.value();
 
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', form.getAttribute('action'));
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    window.location.href = "/articles/page/1";
-                } else {
-                    console.error('Ошибка при обновлении статьи');
-                }
-            };
-            xhr.send(formData);
+        if (labelInput.value === '' || authorInput.value === '' || titleInput.value === '' || descriptionInput.value === '' || textValue === '') {
+            alert('Пожалуйста, заполните все поля.');
+            return;
         }
 
-        function previewImage() {
-            const preview = document.querySelector('#imagePreview');
-            const file = document.querySelector('input[type=file]').files[0];
-            const reader = new FileReader();
+        const form = document.getElementById('articleForm');
+        const formData = new FormData(form);
 
-            const fileSize = file.size;
-            const maxSize = 5242880;
+        formData.set('text', textValue);
+        formData.append('multipartFile', formData.get('image'));
 
-            if (fileSize > maxSize) {
-              alert("Размер файла превышает 5 мегабайт. Пожалуйста, выберите файл меньшего размера.");
-              event.target.value = "";
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', form.getAttribute('action'));
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                window.location.href = "/articles/page/1";
+            } else {
+                console.error('Ошибка при обновлении статьи');
             }
-            else {
-                reader.onloadend = function () {
-                    const img = document.createElement('img');
-                    img.src = reader.result.toString();
-                    preview.innerHTML = '';
-                    preview.appendChild(img);
-                }
-                if (file) {
-                    reader.readAsDataURL(file);
-                }
+        };
+        xhr.send(formData);
+    }
+
+    function previewImage() {
+        const preview = document.querySelector('#imagePreview');
+        const file = document.querySelector('input[type=file]').files[0];
+        const reader = new FileReader();
+
+        const fileSize = file.size;
+        const maxSize = 5242880;
+
+        if (fileSize > maxSize) {
+            alert("Размер файла превышает 5 мегабайт. Пожалуйста, выберите файл меньшего размера.");
+            event.target.value = "";
+        } else {
+            reader.onloadend = function () {
+                const img = document.createElement('img');
+                img.src = reader.result.toString();
+                preview.innerHTML = '';
+                preview.appendChild(img);
+            }
+            if (file) {
+                reader.readAsDataURL(file);
             }
         }
-    </script>
+    }
+</script>
 
-    <footer th:insert="~{blocks/footer.html :: footer}"></footer>
+<footer th:insert="~{blocks/footer.html :: footer}"></footer>
 </body>
 
 </html>

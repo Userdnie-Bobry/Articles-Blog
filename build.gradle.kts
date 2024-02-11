@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_17
@@ -22,6 +22,7 @@ repositories {
 }
 
 dependencies {
+	implementation("org.jsoup:jsoup:1.15.3")
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0")
 	implementation("org.hibernate.search:hibernate-search-mapper-orm:7.1.0.Alpha1")
 	implementation("org.hibernate.search:hibernate-search-backend-lucene:7.1.0.Alpha1")
