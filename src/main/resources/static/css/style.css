@@ -1,0 +1,278 @@
+        * {
+        padding: 0;
+        margin: 0;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background-color: #dcdcdc;
+            display: flex;
+            flex-direction: column;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            outline: none;
+            resize: none;
+            font-size: 16px;
+            margin-top: 20px;
+            border-radius: 5px;
+            border-color: #0071f0;
+        }
+
+        textarea:focus,
+        textarea:valid {
+            border-color: rgba(0, 113, 240, 0.7);
+        }
+
+        footer, footer a {
+           transform: translate(0, 10px);
+           padding: 20px;
+           color: white;
+           background-color: #212529;
+           margin-top: 20px;
+       }
+
+/* create-article.html */
+/* edit-article.html */
+/* get-article.html */
+/* about.html */
+       .h1__withLine{
+            text-align: center;
+            padding-bottom: 30px;
+            margin-top: 0px;
+            margin-bottom: 40px;
+            font-size: 40px;
+            border-bottom: 1px solid rgb(159, 159, 159);
+       }
+
+/* create-article.html */
+/* edit-article.html */
+/* get-article.html */
+/* about.html */
+       .navbar-nav > li > a {
+            padding: 15px;
+       }
+
+/* create-article.html */
+/* edit-article.html */
+/* get-article.html */
+/* about.html */
+       .centered-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+       }
+
+/* create-article.html */
+/* edit-article.html */
+/* get-article.html */
+/* about.html */
+       .form {
+            margin-top: 120px;
+            min-height: 94vh;
+            width: 1000px;
+            padding: 32px;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px #ccc;
+            font-family: 'PT Sans', sans-serif;
+            letter-spacing: 1px;
+            background-color: white;
+       }
+
+/* create-article.html */
+/* edit-article.html */
+/* get-article.html */
+       .form-box {
+            display: flex;
+            flex-wrap: wrap;
+       }
+
+/* create-article.html */
+/* edit-article.html */
+        .form-box>* {
+            flex: 0 0 50%;
+        }
+
+/* create-article.html */
+/* edit-article.html */
+        .text-field {
+            width: 100%;
+            position: relative;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+/* create-article.html */
+/* edit-article.html */
+        .text-field__inp {
+            width: 100%;
+            padding: 10px 0;
+            border: 0;
+            outline: none;
+            border-radius: 0;
+            appearance: none;
+            font-size: 18px;
+            border-bottom: 1px solid rgb(159, 159, 159);
+            transition: border-color .3s;
+        }
+
+/* create-article.html */
+/* edit-article.html */
+        .text-field__inp:focus {
+            border-color: #0071f0;
+        }
+
+/* create-article.html */
+/* edit-article.html */
+        .text-field__placeholder {
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 10px;
+            color: rgb(159, 159, 159);
+            font-size: 18px;
+            pointer-events: none;
+            transform-origin: left;
+            transition: top .3s, transform .3s, color .3s;
+        }
+
+/* create-article.html */
+/* edit-article.html */
+        .text-field__inp:focus + .text-field__placeholder,
+        .text-field__inp:not(:focus):valid + .text-field__placeholder {
+            top: -15px;
+            transform: scale(.85);
+            color: #0071f0;
+        }
+
+/* create-article.html */
+/* edit-article.html */
+        .form-box__image {
+            padding-left: 30px;
+        }
+
+/* create-article.html */
+/* edit-article.html */
+        .text-field__area {
+            margin-top: 14px;
+            margin-bottom: 0px;
+            text-align: left;
+            font-size: 20px;
+        }
+
+/* articles.html */
+        .album {
+            transform: translate(0, 10px);
+        }
+
+/* articles.html */
+/* get-article.html */
+        .btn-group a + a {
+            margin-left: 5px;
+        }
+
+/* articles.html */
+        .articles-content {
+            display: flex;
+            margin-top: 60px;
+            flex-direction: column;
+        }
+
+/* articles.html */
+        .articles-bloc {
+            margin-top: 20px;
+            min-height: 565px;
+        }
+
+/* get-article.html */
+        .text__get-article{
+            text-align: left;
+            vertical-align: middle;
+        }
+
+/* get-article.html */
+        .image__get-article {
+            width: 300px;
+            height: 200px;
+            border-radius: 5px;
+            border: 5px solid #fff;
+            box-shadow: 2px 1px 5px #0071f0;
+        }
+
+/* get-article.html */
+        .article-text_get-article {
+            border-radius: 5px;
+            border: 1px solid #0071f0;
+            margin-bottom: 20px;
+        }
+
+/* about.html */
+        .info-text {
+            text-align: center;
+            margin-bottom: 0px;
+        }
+
+/* about.html */
+        .info-img {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+/* articles.html */
+/* get-article.html */
+/* about.html */
+        .fade-in {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+/* articles.html */
+/* get-article.html */
+/* about.html */
+        .fade-in.loaded {
+             opacity: 1;
+        }
+
+/* get-article.html */
+        #imageArticles {
+            padding-right: 32px;
+            width: 70%;
+        }
+
+/* get-article.html */
+#imageArticles img {
+            margin-left: 25%;
+            margin-right: 25%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+/* articles.html */
+         #imagePreviewArticles {
+            height: 210px;
+         }
+
+/* create-article.html */
+/* edit-article.html */
+        #imagePreview {
+            border: 1px solid #0071f0;
+            height: 210px;
+        }
+
+/* create-article.html */
+/* edit-article.html */
+/* articles.html */
+        #imagePreview img, #imagePreviewArticles img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
