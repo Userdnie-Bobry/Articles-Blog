@@ -26,14 +26,15 @@ public class GigaChatController {
 
     @GetMapping("/summary/{id}")
     @Operation(summary = "Получение пересказа статьи")
-    public ResponseEntity<String> generate(@PathVariable Integer id, Model model) throws IOException, InterruptedException{
+    public ResponseEntity<String> generate(@PathVariable Integer id, Model model) throws IOException, InterruptedException {
         GetArticleDTO article = articleService.getArticle(id);
         String text = Jsoup.parse(article.getText()).text();
         log.info(text);
         String summary = gigaChatService.getAnswer(text);
         log.info(summary);
-        model.addAttribute("summary", summary);
-
-        return ResponseEntity.ok(summary);
+        model.addAttribute("id", id);
+        return ResponseEntity.ok()
+                .header("Content-Type", "application/json")
+                .body(summary);
     }
 }

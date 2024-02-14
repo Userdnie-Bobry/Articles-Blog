@@ -23,38 +23,56 @@
     </div>
     <br>
 
-        <div class="container">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                <div th:each="article, iterStat : ${articles}" class="col">
-                    <div class="card shadow-sm">
-                        <div id="imagePreviewArticles">
-                            <img th:src="${article.image}" class="fade-in bd-placeholder-img card-img-top"
-                                 onload="this.classList.add('loaded')" width="100%" height="225" alt="">
-                        </div>
-                        <div class="card-body">
-                            <strong>Метка:</strong> <span th:text="${article.label}" class="underline"></span>
-                            <p><strong>Автор:</strong> <span th:text="${article.author}" class="underline"></span></p>
-                            <h5 class="card-title" th:text="${article.title}"></h5>
-                            <p class="card-text" th:text="${article.description}"></p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a th:href="@{/articles/{id}(id=${article.id})}">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">Просмотр</button>
-                                    </a>
-                                    <a th:href="@{/summary/{id}(id=${article.id})}">
-                                        <button type="button" class="btn btn-sm btn-outline-primary ml-2">Пересказать
-                                        </button>
-                                    </a>
-                                </div>
-                                <small class="text-body-secondary" th:text="${article.dateCreate}"></small>
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            <div th:each="article, iterStat : ${articles}" class="col">
+                <div class="card shadow-sm">
+                    <div id="imagePreviewArticles">
+                        <img th:src="${article.image}" class="fade-in bd-placeholder-img card-img-top"
+                             onload="this.classList.add('loaded')" width="100%" height="225" alt="">
+                    </div>
+                    <div class="card-body">
+                        <strong>Метка:</strong> <span th:text="${article.label}" class="underline"></span>
+                        <p><strong>Автор:</strong> <span th:text="${article.author}" class="underline"></span></p>
+                        <h5 class="card-title" th:text="${article.title}"></h5>
+                        <p class="card-text" th:text="${article.description}"></p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <a th:href="@{/articles/{id}(id=${article.id})}">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary">Просмотр</button>
+                                </a>
+                                <a>
+                                    <button id="summaryButton" type="button" class="btn btn-sm btn-outline-primary ml-2"
+                                            onclick="openPopUp()">Пересказать
+                                    </button>
+                                </a>
                             </div>
+                            <small class="text-body-secondary" th:text="${article.dateCreate}"></small>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
+<div id="dialogBackdrop" class="hidden">
+    <div id="pop_up">
+        <div id="dialogHeader">
+            <button type="button" id="close_pop_up" onclick="closePopUp()">&#10006</button>
+        </div>
+        <div id="dialogContent">
+            <p id="summary" class="underline text"></p>
+        </div>
+        <div id="dialogFooter">
+            <button id="copyButton" type="button" class="btn btn-sm btn-outline-primary ml-2 button_summary">
+                Скопировать
+            </button>
+        </div>
+    </div>
+</div>
+
+<br>
 <div th:if="${!searched}">
     <div th:replace="~{blocks/page_switcher :: page_switcher}"></div>
 </div>
@@ -63,8 +81,38 @@
     <div th:replace="~{blocks/page_switcher_search :: page_switcher_search}"></div>
 </div>
 
-
 <footer th:insert="~{blocks/footer.html :: footer}"></footer>
-</body>
 
+<script>
+    const summary = document.getElementById("summary");
+    const buttonSummary = document.querySelector(".button_summary");
+
+    const openPopUp = () => {
+        document.getElementById('dialogBackdrop').classList.remove('hidden');
+        fetchSummary(`${id}`);
+        console.log("не открывает")
+    }
+
+    const closePopUp = () => {
+        document.getElementById('dialogBackdrop').classList.add('hidden');
+    }
+
+    const fetchSummary = async (id) => {
+        await fetch(`/summary/${id}`)
+            .then(response => {
+                if (response.status === 200) {
+                    document.getElementById('summary').textContent = response.content;
+                } else if (!response.ok) {
+                    throw new Error('АШИБКА')
+                }
+            })
+    }
+
+    buttonSummary.addEventListener("click", () => {
+        navigator.clipboard.writeText(summary.textContent);
+        alert("Пересказ скопирован в буфер обмена");
+    })
+</script>
+
+</body>
 </html>

@@ -52,6 +52,8 @@
     </div>
 </div>
 
+<footer th:insert="~{blocks/footer.html :: footer}"></footer>
+
 <script>
     function submitForm() {
         if (confirm("Вы уверены, что хотите удалить эту статью?")) {
@@ -82,8 +84,6 @@
         }
     }
 </script>
-
-<footer th:insert="~{blocks/footer.html :: footer}"></footer>
 </body>
 
 </html>
