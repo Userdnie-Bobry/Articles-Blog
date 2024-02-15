@@ -8,33 +8,53 @@ import org.articlesblog.dto.articledto.GetArticleDTO;
 import org.articlesblog.services.article.ArticleService;
 import org.articlesblog.services.gigachat.GigaChatService;
 import org.jsoup.Jsoup;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
+import java.util.Map;
 
 @Tag(name = "GigaChat")
 @RestController
 @Slf4j
 @RequiredArgsConstructor
 public class GigaChatController {
+    @Value("${gigachat.promt.summary}")
+    private String promtSummary;
+
+    @Value("${gigachat.promt.article}")
+    private String promtArticle;
+
     private final GigaChatService gigaChatService;
     private final ArticleService articleService;
 
     @GetMapping("/summary/{id}")
     @Operation(summary = "Получение пересказа статьи")
-    public ResponseEntity<String> generate(@PathVariable Integer id, Model model) throws IOException, InterruptedException {
+    public ResponseEntity<String> generateSummary(@PathVariable Integer id, Model model) {
         GetArticleDTO article = articleService.getArticle(id);
         String text = Jsoup.parse(article.getText()).text();
         log.info(text);
-        String summary = gigaChatService.getAnswer(text);
+        String summary = gigaChatService.getAnswer(text, promtSummary);
         log.info(summary);
-        model.addAttribute("id", id);
+
+        return ResponseEntity.ok(summary);
+    }
+
+    @PostMapping("/generate")
+    @Operation(summary = "Генерация статьи")
+    public ResponseEntity<String> generateArticle(@RequestBody Map<String, String> articleColumns) {
+        String articleText = articleColumns.get("articleColumns");
+        log.info("Получены колонки articleColumns: " + articleText);
+
+        String text = Jsoup.parse(articleText).text();
+
+        String generatedArticleText = gigaChatService.getAnswer(text, promtArticle);
+        log.info("Сгенерированный текст статьи: " + generatedArticleText);
+
         return ResponseEntity.ok()
-                .header("Content-Type", "application/json")
-                .body(summary);
+                .contentType(MediaType.TEXT_PLAIN)
+                .body(generatedArticleText);
     }
 }

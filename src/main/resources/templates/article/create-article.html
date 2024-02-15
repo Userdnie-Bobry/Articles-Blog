@@ -62,10 +62,11 @@
                 <label class="text-field__area" for="text">Текст статьи:</label>
                 <textarea id="text" name="text" autocomplete="off" required></textarea>
             </div>
+            <div id="text12"></div>
         </div>
 
         <button type="button" onclick="submitForm()" class="btn btn-outline-success">Создать статью</button>
-        <button type="submit" class="btn btn-outline-primary">Сгенерировать статью</button>
+        <button type="submit" onclick="generateArticle()" class="btn btn-outline-primary">Сгенерировать статью</button>
     </form>
 </div>
 
@@ -111,6 +112,30 @@
             }
         };
         xhr.send(formData);
+    }
+
+    function generateArticle() {
+        const label = document.getElementById('label').value;
+        const title = document.getElementById('title').value;
+        const description = document.getElementById('description').value;
+
+        const articleColumns = `${label}\n${title}\n${description}`;
+
+        fetch('/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ articleColumns }),
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Полученный текст статьи:', data);
+                document.getElementById('text12').innerText = data;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 
     function previewImage() {
@@ -159,9 +184,6 @@
         }
     }
 
-    function delHeader() {
-        document.getElementById('header').remove();
-    }
 
     document.querySelector('.my-custom-button-generate').addEventListener('click', submitFormGenerate);
 </script>

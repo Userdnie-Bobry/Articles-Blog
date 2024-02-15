@@ -43,8 +43,9 @@
                                 </a>
                                 <a>
                                     <button id="summaryButton" type="button" class="btn btn-sm btn-outline-primary ml-2"
-                                            onclick="openPopUp()">Пересказать
+                                            th:attr="onclick='openPopUp(\'' + ${article.id} + '\')'">Пересказать
                                     </button>
+
                                 </a>
                             </div>
                             <small class="text-body-secondary" th:text="${article.dateCreate}"></small>
@@ -62,6 +63,9 @@
             <button type="button" id="close_pop_up" onclick="closePopUp()">&#10006</button>
         </div>
         <div id="dialogContent">
+            <div id="progressBar" class="progress-bar hidden">
+                <div class="progress"></div>
+            </div>
             <p id="summary" class="underline text"></p>
         </div>
         <div id="dialogFooter">
@@ -86,25 +90,65 @@
 <script>
     const summary = document.getElementById("summary");
     const buttonSummary = document.querySelector(".button_summary");
+    let isFetchingSummary = false;
 
-    const openPopUp = () => {
+    const adjustDialogSize = () => {
+        const dialogContent = document.getElementById('dialogContent');
+        const summary = document.getElementById('summary');
+
+        // Получаем высоту текста
+        const textHeight = summary.clientHeight;
+
+        // Меняем высоту диалогового окна
+        dialogContent.style.height = textHeight + 'px';
+    }
+
+    const openPopUp = (articleId) => {
         document.getElementById('dialogBackdrop').classList.remove('hidden');
-        fetchSummary(`${id}`);
-        console.log("не открывает")
+        document.getElementById('summary').textContent = '';
+        showProgressBar();
+
+        if (isFetchingSummary) {
+            clearInterval(fetchTimer);
+            isFetchingSummary = false;
+        }
+
+        fetchSummary(articleId);
+        console.log("не открывает");
     }
 
     const closePopUp = () => {
         document.getElementById('dialogBackdrop').classList.add('hidden');
     }
 
+    let fetchTimer;
     const fetchSummary = async (id) => {
-        await fetch(`/summary/${id}`)
+        isFetchingSummary = true;
+
+        await fetch('/summary/' + id)
             .then(response => {
                 if (response.status === 200) {
-                    document.getElementById('summary').textContent = response.content;
-                } else if (!response.ok) {
-                    throw new Error('АШИБКА')
+                    hideProgressBar();
+                    return response.text();
+                } else {
+                    throw new Error('Ошибка')
                 }
+            })
+            .then(content => {
+                const summaryElement = document.getElementById('summary');
+                let index = 0;
+                const text = content;
+                const interval = 30;
+
+                fetchTimer = setInterval(() => {
+                    summaryElement.textContent += text.charAt(index);
+                    index++;
+
+                    if (index === text.length) {
+                        clearInterval(fetchTimer);
+                        isFetchingSummary = false;
+                    }
+                }, interval);
             })
     }
 
@@ -112,6 +156,14 @@
         navigator.clipboard.writeText(summary.textContent);
         alert("Пересказ скопирован в буфер обмена");
     })
+
+    function showProgressBar() {
+        document.getElementById('progressBar').classList.remove('hidden');
+    }
+
+    function hideProgressBar() {
+        document.getElementById('progressBar').classList.add('hidden');
+    }
 </script>
 
 </body>

@@ -59,7 +59,7 @@ public class GigaChatServiceImpl implements GigaChatService {
         return model;
     }
 
-    public String getAnswer(String content) {
+    public String getAnswer(String content, String promt) {
         String token = getAccessToken();
         String model = getModel();
         log.info("model: " + model);
@@ -70,7 +70,7 @@ public class GigaChatServiceImpl implements GigaChatService {
               "messages": [
                 {
                   "role": "system",
-                  "content": "Перескажи этот текст своими словами, сохраняя его основной смысл и структуру."
+                  "content": "%s"
                 },
                 {
                   "role": "user",
@@ -78,7 +78,7 @@ public class GigaChatServiceImpl implements GigaChatService {
                 }
               ],
               "temperature": 0.7
-            }""", model, content);
+            }""", model, promt, content);
 
         String response = gigaChatGenFeignClient.getAnswer("Bearer " + token, jsonPayload);
 
