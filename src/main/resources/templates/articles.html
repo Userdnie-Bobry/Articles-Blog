@@ -92,17 +92,6 @@
     const buttonSummary = document.querySelector(".button_summary");
     let isFetchingSummary = false;
 
-    const adjustDialogSize = () => {
-        const dialogContent = document.getElementById('dialogContent');
-        const summary = document.getElementById('summary');
-
-        // Получаем высоту текста
-        const textHeight = summary.clientHeight;
-
-        // Меняем высоту диалогового окна
-        dialogContent.style.height = textHeight + 'px';
-    }
-
     const openPopUp = (articleId) => {
         document.getElementById('dialogBackdrop').classList.remove('hidden');
         document.getElementById('summary').textContent = '';

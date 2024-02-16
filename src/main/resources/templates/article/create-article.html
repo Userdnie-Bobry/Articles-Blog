@@ -27,17 +27,17 @@
         <div class="form-box">
             <div class="form-box__text">
                 <div class="text-field">
-                    <input class="text-field__inp" type="text" id="label" name="label" required>
+                    <input class="text-field__inp" type="text" id="label" name="label" required maxlength="240">
                     <label class="text-field__placeholder" for="label">Метка:</label>
                 </div>
 
                 <div class="text-field">
-                    <input class="text-field__inp" type="text" id="author" name="author" required>
+                    <input class="text-field__inp" type="text" id="author" name="author" required maxlength="240">
                     <label class="text-field__placeholder" for="author">Автор:</label>
                 </div>
 
                 <div class="text-field">
-                    <input class="text-field__inp" type="text" id="title" name="title" required>
+                    <input class="text-field__inp" type="text" id="title" name="title" required maxlength="240">
                     <label class="text-field__placeholder" for="title">Название:</label>
                 </div>
             </div>
@@ -55,17 +55,18 @@
         <div class="text-field">
             <div>
                 <label class="text-field__area" for="description">Краткое описание:</label>
-                <textarea id="description" name="description" required></textarea>
+                <textarea id="description" name="description" required maxlength="240"></textarea>
             </div>
 
             <div>
                 <label class="text-field__area" for="text">Текст статьи:</label>
                 <textarea id="text" name="text" autocomplete="off" required></textarea>
             </div>
-            <div id="text12"></div>
+
+            <progress id="progressBar" style="display: none;" value="0" max="100"></progress>
         </div>
 
-        <button type="button" onclick="submitForm()" class="btn btn-outline-success">Создать статью</button>
+        <button type="submit" onclick="submitForm()" class="btn btn-outline-success">Создать статью</button>
         <button type="submit" onclick="generateArticle()" class="btn btn-outline-primary">Сгенерировать статью</button>
     </form>
 </div>
@@ -88,7 +89,6 @@
         const textValue = simplemde.value();
 
         if (labelInput.value === '' || authorInput.value === '' || titleInput.value === '' || descriptionInput.value === '' || textValue === '') {
-            alert('Пожалуйста, заполните все поля.');
             return;
         }
 
@@ -107,7 +107,8 @@
         xhr.onload = function () {
             if (xhr.status === 200) {
                 window.location.href = "/articles/page/1";
-            } else {
+            }
+            else {
                 console.error('Ошибка при создании статьи');
             }
         };
@@ -115,11 +116,23 @@
     }
 
     function generateArticle() {
+        document.getElementById('progressBar').value = 10;
         const label = document.getElementById('label').value;
         const title = document.getElementById('title').value;
         const description = document.getElementById('description').value;
+        console.log("label: " + label);
+        console.log("title: " + title);
+        console.log("description: " + description);
 
         const articleColumns = `${label}\n${title}\n${description}`;
+
+        if (label === '' || title === '' || description === '') {
+            console.log("Что-то пусто: " + label + title + description);
+            return;
+        }
+
+        document.getElementById('progressBar').style.display = 'block';
+        document.getElementById('progressBar').value = 30;
 
         fetch('/generate', {
             method: 'POST',
@@ -130,8 +143,14 @@
         })
             .then(response => response.text())
             .then(data => {
+                document.getElementById('progressBar').value = 50;
                 console.log('Полученный текст статьи:', data);
-                document.getElementById('text12').innerText = data;
+                const pos = simplemde.codemirror.getCursor();
+                simplemde.codemirror.setSelection(pos, pos);
+                simplemde.codemirror.replaceSelection(data);
+
+                document.getElementById('progressBar').value = 100;
+                document.getElementById('progressBar').style.display = 'none';
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -163,29 +182,6 @@
             }
         }
     }
-
-    function submitFormGenerate() {
-        if (document.getElementById('label').value.trim() === '') {
-            document.getElementById('label').style.border = '2px solid red';
-        } else {
-            document.getElementById('label').style.border = '';
-        }
-
-        if (document.getElementById('title').value.trim() === '') {
-            document.getElementById('title').style.border = '2px solid red';
-        } else {
-            document.getElementById('title').style.border = '';
-        }
-
-        if (document.getElementById('description').value.trim() === '') {
-            document.getElementById('description').style.border = '2px solid red';
-        } else {
-            document.getElementById('description').style.border = '';
-        }
-    }
-
-
-    document.querySelector('.my-custom-button-generate').addEventListener('click', submitFormGenerate);
 </script>
 
 <footer th:insert="~{blocks/footer.html :: footer}"></footer>

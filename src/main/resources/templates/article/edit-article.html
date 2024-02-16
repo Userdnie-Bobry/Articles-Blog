@@ -27,17 +27,17 @@
         <div class="form-box">
             <div class="form-box__text">
                 <div class="text-field">
-                    <input class="text-field__inp" type="text" id="label" name="label" th:field="*{label}" required>
+                    <input class="text-field__inp" type="text" id="label" name="label" th:field="*{label}" required maxlength="240">
                     <label class="text-field__placeholder" for="label">Метка:</label>
                 </div>
 
                 <div class="text-field">
-                    <input class="text-field__inp" type="text" id="author" name="author" th:field="*{author}" required>
+                    <input class="text-field__inp" type="text" id="author" name="author" th:field="*{author}" required maxlength="240">
                     <label class="text-field__placeholder" for="author">Автор:</label>
                 </div>
 
                 <div class="text-field">
-                    <input class="text-field__inp" type="text" id="title" name="title" th:field="*{title}" required>
+                    <input class="text-field__inp" type="text" id="title" name="title" th:field="*{title}" required maxlength="240">
                     <label class="text-field__placeholder" for="title">Название:</label>
                 </div>
             </div>
@@ -56,7 +56,7 @@
         <div class="text-field">
             <div>
                 <label class="text-field__area" for="description">Краткое описание:</label>
-                <textarea id="description" name="description" required th:field="*{description}"></textarea>
+                <textarea id="description" name="description" required th:field="*{description}" maxlength="240"></textarea>
             </div>
 
             <div>

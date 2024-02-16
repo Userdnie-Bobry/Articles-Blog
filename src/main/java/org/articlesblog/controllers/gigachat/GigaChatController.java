@@ -1,6 +1,5 @@
 package org.articlesblog.controllers.gigachat;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +44,7 @@ public class GigaChatController {
     @Operation(summary = "Генерация статьи")
     public ResponseEntity<String> generateArticle(@RequestBody Map<String, String> articleColumns) throws IOException {
         String articleText = articleColumns.get("articleColumns");
+
         log.info("Получены колонки articleColumns: " + articleText);
 
         String text = Jsoup.parse(articleText).text();
