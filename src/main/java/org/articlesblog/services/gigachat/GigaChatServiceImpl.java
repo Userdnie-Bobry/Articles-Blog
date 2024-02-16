@@ -1,5 +1,8 @@
 package org.articlesblog.services.gigachat;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.articlesblog.feignclients.gigachat.GigaChatAuthFeignClient;
@@ -7,7 +10,10 @@ import org.articlesblog.feignclients.gigachat.GigaChatGenFeignClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.UUID;
 
@@ -31,7 +37,7 @@ public class GigaChatServiceImpl implements GigaChatService {
     private final GigaChatAuthFeignClient gigaChatAuthFeignClient;
     private final GigaChatGenFeignClient gigaChatGenFeignClient;
 
-    public String getAccessToken() {
+    public String getAccessToken() throws JsonProcessingException {
         String authorization = Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes(StandardCharsets.UTF_8));
         log.info("auth data: " + authorization);
         String rqUID = UUID.randomUUID().toString();
@@ -39,10 +45,12 @@ public class GigaChatServiceImpl implements GigaChatService {
 
         String response = gigaChatAuthFeignClient.getAccessToken("Basic " + authorization, rqUID, body);
 
-        return response.substring(response.indexOf("access_token=") + 18, response.length() - 29);
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode rootNode = mapper.readTree(response);
+        return rootNode.get("access_token").asText();
     }
 
-    public String getModel() {
+    public String getModel() throws JsonProcessingException {
         String token = getAccessToken();
         log.info("token: " + token);
 
@@ -59,29 +67,22 @@ public class GigaChatServiceImpl implements GigaChatService {
         return model;
     }
 
-    public String getAnswer(String content, String promt) {
+    public String getAnswer(String content, String promt) throws IOException {
         String token = getAccessToken();
         String model = getModel();
         log.info("model: " + model);
 
-        String jsonPayload = String.format("""
-            {
-              "model": "%s",
-              "messages": [
-                {
-                  "role": "system",
-                  "content": "%s"
-                },
-                {
-                  "role": "user",
-                  "content": "%s"
-                }
-              ],
-              "temperature": 0.7
-            }""", model, promt, content);
+        String jsonPayload = String.format(
+                new String(Files.readAllBytes(Paths.get("src/main/resources/json/gigachat_json_payload.json"))),
+                model,
+                promt,
+                content
+        );
 
         String response = gigaChatGenFeignClient.getAnswer("Bearer " + token, jsonPayload);
 
-        return response.substring(response.indexOf("choices") + 33, response.length() - 224);
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode rootNode = mapper.readTree(response);
+        return rootNode.get("choices").get(0).get("message").get("content").asText();
     }
 }

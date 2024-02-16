@@ -1,5 +1,6 @@
 package org.articlesblog.controllers.gigachat;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.jsoup.Jsoup;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Map;
 
 @Tag(name = "GigaChat")
@@ -25,12 +27,14 @@ public class GigaChatController {
 
     @GetMapping("/summary/{id}")
     @Operation(summary = "Получение пересказа статьи")
-    public ResponseEntity<String> generateSummary(@PathVariable Integer id) {
+    public ResponseEntity<String> generateSummary(@PathVariable Integer id) throws IOException {
         GetArticleDTO article = articleService.getArticle(id);
         String text = Jsoup.parse(article.getText()).text();
         log.info("Текст статьи: " + text);
+
         String promt = gigaChatConfig.getPromtSummary();
         log.info("Промт: " + promt);
+
         String summary = gigaChatService.getAnswer(text, promt);
         log.info("Суммари" + summary);
 
@@ -39,7 +43,7 @@ public class GigaChatController {
 
     @PostMapping("/generate")
     @Operation(summary = "Генерация статьи")
-    public ResponseEntity<String> generateArticle(@RequestBody Map<String, String> articleColumns) {
+    public ResponseEntity<String> generateArticle(@RequestBody Map<String, String> articleColumns) throws IOException {
         String articleText = articleColumns.get("articleColumns");
         log.info("Получены колонки articleColumns: " + articleText);
 
@@ -47,6 +51,7 @@ public class GigaChatController {
 
         String promt = gigaChatConfig.getPromtArticle();
         log.info("Промт: " + promt);
+
         String generatedArticleText = gigaChatService.getAnswer(text, promt);
         log.info("Сгенерированный текст статьи: " + generatedArticleText);
 

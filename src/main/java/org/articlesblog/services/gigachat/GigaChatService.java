@@ -1,9 +1,11 @@
 package org.articlesblog.services.gigachat;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import java.io.IOException;
 
 public interface GigaChatService {
-    String getAccessToken();
-    String getModel();
-    String getAnswer(String content, String promt);
+    String getAccessToken() throws JsonProcessingException;
+    String getModel() throws JsonProcessingException;
+    String getAnswer(String content, String promt) throws IOException;
 }
