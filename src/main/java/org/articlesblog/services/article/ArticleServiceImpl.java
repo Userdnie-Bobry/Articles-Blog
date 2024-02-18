@@ -8,6 +8,10 @@ import org.articlesblog.services.firebase.FirebaseStorageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -28,8 +32,7 @@ public class ArticleServiceImpl implements ArticleService{
                     String createDate = article.getDateCreate().format(formatter);
                     String changeDate = article.getDateChange() != null ? article.getDateChange().format(formatter) : "-";
 
-
-                    return new GetArticleDTO(article.getId(), article.getTitle(), article.getText(),
+                    return new GetArticleDTO(article.getId(), article.getTitle(), markdownToHTML(article.getText()),
                             article.getAuthor(),  article.getLabel(), createDate, changeDate, article.getImage());
                 })
                 .orElse(null);
@@ -86,12 +89,18 @@ public class ArticleServiceImpl implements ArticleService{
     public EditArticleDTO editArticle(Integer id, CreateArticleDTO articleDTO) {
         Article article = articleRepository.findById(id)
                 .map(existingArticle -> {
+                    String imageURL = existingArticle.getImage();
+
+                    if (!articleDTO.getMultipartFile().isEmpty()) {
+                        imageURL = firebaseStorageService.updateImage(existingArticle.getImage(), articleDTO.getMultipartFile());
+                    }
+
                     existingArticle.setTitle(articleDTO.getTitle());
                     existingArticle.setDescription(articleDTO.getDescription());
                     existingArticle.setAuthor(articleDTO.getAuthor());
                     existingArticle.setLabel(articleDTO.getLabel());
                     existingArticle.setText(articleDTO.getText());
-                    existingArticle.setImage(firebaseStorageService.updateImage(existingArticle.getImage(), articleDTO.getMultipartFile()));
+                    existingArticle.setImage(imageURL);
                     existingArticle.setDateChange(LocalDateTime.now());
 
                     return articleRepository.save(existingArticle);
@@ -116,5 +125,16 @@ public class ArticleServiceImpl implements ArticleService{
             }
             return "Статья " + id + " удалена";
         }).orElse("Статья не найдена");
+    }
+
+    private String markdownToHTML(String markdown) {
+        Parser parser = Parser.builder()
+                .build();
+
+        Node document = parser.parse(markdown);
+        HtmlRenderer renderer = HtmlRenderer.builder()
+                .build();
+
+        return renderer.render(document);
     }
 }

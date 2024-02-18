@@ -1,76 +1,36 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+
     <title th:text="${title}"></title>
-    <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
-
-        body {
-            background-image: url('static/images/background.jpg');
-            background-size: cover;
-            background-attachment: fixed;
-        }
-
-        @media (min-width: 768px) {
-        }
-
-        .navbar-nav > li > a {
-            padding: 15px;
-        }
-
-        .album {
-            transform: translate(0, 10px);
-        }
-
-        header {
-            transform: translate(0, 0px);
-            padding: 20px;
-        }
-
-        footer {
-            transform: translate(0, 10px);
-            padding: 20px;
-        }
-
-        .btn-group a + a {
-            margin-left: 5px;
-        }
-
-        .centered-content {
-            display: flex;
-            flex: 1;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-    </style>
 </head>
 <body>
+<header id="header" th:insert="~{blocks/header.html :: header}"></header>
+<br>
 
-<header th:insert="~{blocks/header.html :: header}"></header>
-<div th:if="${!searched}">
-    <div th:replace="~{blocks/page_switcher :: page_switcher}"></div>
-</div>
-<div th:if="${searched}">
-    <div th:replace="~{blocks/page_switcher_search :: page_switcher_search}"></div>
-</div>
+<div class="articles-content">
+    <div th:if="${!searched}">
+        <div th:replace="~{blocks/page_switcher :: page_switcher}"></div>
+    </div>
 
-<div class="album py-5 bg-body-tertiary">
+    <div th:if="${searched}">
+        <div th:replace="~{blocks/page_switcher_search :: page_switcher_search}"></div>
+    </div>
+    <br>
+
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             <div th:each="article, iterStat : ${articles}" class="col">
                 <div class="card shadow-sm">
-                    <img th:src="${article.image}" class="bd-placeholder-img card-img-top" width="100%"
-                         height="225" alt="Изображение статьи">
+                    <div id="imagePreviewArticles">
+                        <img th:src="${article.image}" class="fade-in bd-placeholder-img card-img-top"
+                             onload="this.classList.add('loaded')" width="100%" height="225" alt="">
+                    </div>
                     <div class="card-body">
                         <strong>Метка:</strong> <span th:text="${article.label}" class="underline"></span>
                         <p><strong>Автор:</strong> <span th:text="${article.author}" class="underline"></span></p>
@@ -82,7 +42,10 @@
                                     <button type="button" class="btn btn-sm btn-outline-secondary">Просмотр</button>
                                 </a>
                                 <a>
-                                    <button type="button" class="btn btn-sm btn-outline-primary ml-2">Пересказать</button>
+                                    <button id="summaryButton" type="button" class="btn btn-sm btn-outline-primary ml-2"
+                                            th:attr="onclick='openPopUp(\'' + ${article.id} + '\')'">Пересказать
+                                    </button>
+
                                 </a>
                             </div>
                             <small class="text-body-secondary" th:text="${article.dateCreate}"></small>
@@ -94,13 +57,103 @@
     </div>
 </div>
 
+<div id="dialogBackdrop" class="hidden">
+    <div id="pop_up">
+        <div id="dialogHeader">
+            <button type="button" id="close_pop_up" onclick="closePopUp()">&#10006</button>
+        </div>
+        <div id="dialogContent">
+            <div id="progressBar" class="progress-bar hidden">
+                <div class="progress"></div>
+            </div>
+            <p id="summary" class="underline text"></p>
+        </div>
+        <div id="dialogFooter">
+            <button id="copyButton" type="button" class="btn btn-sm btn-outline-primary ml-2 button_summary">
+                Скопировать
+            </button>
+        </div>
+    </div>
+</div>
+
+<br>
 <div th:if="${!searched}">
     <div th:replace="~{blocks/page_switcher :: page_switcher}"></div>
 </div>
+
 <div th:if="${searched}">
     <div th:replace="~{blocks/page_switcher_search :: page_switcher_search}"></div>
 </div>
+
 <footer th:insert="~{blocks/footer.html :: footer}"></footer>
+
+<script>
+    const summary = document.getElementById("summary");
+    const buttonSummary = document.querySelector(".button_summary");
+    let isFetchingSummary = false;
+
+    const openPopUp = (articleId) => {
+        document.getElementById('dialogBackdrop').classList.remove('hidden');
+        document.getElementById('summary').textContent = '';
+        showProgressBar();
+
+        if (isFetchingSummary) {
+            clearInterval(fetchTimer);
+            isFetchingSummary = false;
+        }
+
+        fetchSummary(articleId);
+        console.log("не открывает");
+    }
+
+    const closePopUp = () => {
+        document.getElementById('dialogBackdrop').classList.add('hidden');
+    }
+
+    let fetchTimer;
+    const fetchSummary = async (id) => {
+        isFetchingSummary = true;
+
+        await fetch('/summary/' + id)
+            .then(response => {
+                if (response.status === 200) {
+                    hideProgressBar();
+                    return response.text();
+                } else {
+                    throw new Error('Ошибка')
+                }
+            })
+            .then(content => {
+                const summaryElement = document.getElementById('summary');
+                let index = 0;
+                const text = content;
+                const interval = 30;
+
+                fetchTimer = setInterval(() => {
+                    summaryElement.textContent += text.charAt(index);
+                    index++;
+
+                    if (index === text.length) {
+                        clearInterval(fetchTimer);
+                        isFetchingSummary = false;
+                    }
+                }, interval);
+            })
+    }
+
+    buttonSummary.addEventListener("click", () => {
+        navigator.clipboard.writeText(summary.textContent);
+        alert("Пересказ скопирован в буфер обмена");
+    })
+
+    function showProgressBar() {
+        document.getElementById('progressBar').classList.remove('hidden');
+    }
+
+    function hideProgressBar() {
+        document.getElementById('progressBar').classList.add('hidden');
+    }
+</script>
 
 </body>
 </html>

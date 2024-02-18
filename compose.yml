@@ -5,6 +5,8 @@ services:
     build: .
     ports:
       - "8080:8080"
+    volumes:
+      - /src/main/resources/certificates
 
   database:
     image: 'postgres:15.5'

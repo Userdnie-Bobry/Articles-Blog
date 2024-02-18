@@ -1,0 +1,14 @@
+{
+  "model": "%s",
+  "messages": [
+    {
+      "role": "system",
+      "content": "%s"
+    },
+    {
+      "role": "user",
+      "content": "%s"
+    }
+  ],
+  "temperature": 0.7
+}

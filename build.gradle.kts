@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_17
@@ -22,15 +22,14 @@ repositories {
 }
 
 dependencies {
+	implementation("org.jsoup:jsoup:1.15.3")
+	implementation("org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0")
 	implementation("org.hibernate.search:hibernate-search-mapper-orm:7.1.0.Alpha1")
 	implementation("org.hibernate.search:hibernate-search-backend-lucene:7.1.0.Alpha1")
 	implementation("org.hibernate.orm:hibernate-core:6.4.2.Final")
-
 	implementation("com.google.firebase:firebase-admin:9.2.0")
-	implementation("net.coobird:thumbnailator:0.4.20")
-
+	implementation("com.atlassian.commonmark:commonmark:0.17.0")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.2.2")
-
 	implementation("org.springframework.boot:spring-boot-maven-plugin:3.2.2")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
