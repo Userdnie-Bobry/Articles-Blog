@@ -21,14 +21,13 @@ public class CreateArticleDTO {
 
     @Override
     public String toString() {
-        return "CreateArticleDTO{" +
+        return "Статья: " +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", text='" + text + '\'' +
                 ", author='" + author + '\'' +
                 ", label='" + label + '\'' +
-                ", multipartFile=" + multipartFile +
-                '}';
+                ", multipartFile=" + multipartFile;
     }
 }

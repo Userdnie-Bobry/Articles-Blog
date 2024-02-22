@@ -21,7 +21,7 @@ public class GetArticleDTO {
 
     @Override
     public String toString() {
-        return "GetArticleDTO{" +
+        return "Статья: " +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", text='" + text + '\'' +
@@ -29,7 +29,6 @@ public class GetArticleDTO {
                 ", label='" + label + '\'' +
                 ", dateCreate='" + dateCreate + '\'' +
                 ", dateChange='" + dateChange + '\'' +
-                ", image='" + image + '\'' +
-                '}';
+                ", image='" + image + '\'';
     }
 }

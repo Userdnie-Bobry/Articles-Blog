@@ -20,14 +20,13 @@ public class GetAllArticlesDTO {
 
     @Override
     public String toString() {
-        return "GetAllArticlesDTO{" +
+        return "Статья: " +
                 "id=" + id +
                 ", label='" + label + '\'' +
                 ", author='" + author + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", dateCreate='" + dateCreate + '\'' +
-                ", image='" + image + '\'' +
-                '}';
+                ", image='" + image + '\'';
     }
 }

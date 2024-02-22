@@ -20,15 +20,14 @@ public class EditArticleDTO {
 
     @Override
     public String toString() {
-        return "EditArticleDTO{" +
+        return "Статья: " +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", text='" + text + '\'' +
                 ", author='" + author + '\'' +
                 ", label='" + label + '\'' +
-                ", image='" + image + '\'' +
-                '}';
+                ", image='" + image + '\'';
     }
 
 }

@@ -2,6 +2,7 @@ package org.articlesblog.services.firebase;
 
 import com.google.cloud.storage.*;
 
+import lombok.extern.slf4j.Slf4j;
 import org.articlesblog.config.FirebaseConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,7 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class FirebaseStorageServiceImpl implements FirebaseStorageService {
     private static final String BUCKET_NAME = "articles-b1def.appspot.com";
@@ -58,9 +60,11 @@ public class FirebaseStorageServiceImpl implements FirebaseStorageService {
                 Blob blob = storage.create(blobInfo, Files.readAllBytes(path));
                 Files.delete(path);
 
+                log.info("Загружено пользовательское изображение...");
                 return "https://firebasestorage.googleapis.com/v0/b/" + blob.getBucket() + "/o/" +
                         encodeURIComponent(blob.getName()) + "?alt=media&token=" + UUID.randomUUID();
             } else {
+                log.info("Загружено стандартное изображение...");
                 return IMAGE_NAME;
             }
         } catch (IOException e) {
@@ -72,6 +76,7 @@ public class FirebaseStorageServiceImpl implements FirebaseStorageService {
     @Override
     public String updateImage(String id, MultipartFile file) {
         deleteImage(id);
+        log.info("Изменяем изображение...");
         return uploadImage(file);
     }
 
@@ -80,6 +85,7 @@ public class FirebaseStorageServiceImpl implements FirebaseStorageService {
         if (!Objects.equals(id, IMAGE_NAME)) {
             String fileName = id.substring(id.lastIndexOf("/") + 1, id.indexOf("?"));
             storage.get(BUCKET_NAME, fileName).delete();
+            log.info("Изображение удалено.");
         }
     }
 
