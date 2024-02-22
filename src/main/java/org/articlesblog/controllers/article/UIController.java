@@ -25,6 +25,7 @@ public class UIController {
             GetArticleDTO article = articleService.getArticle(id);
             model.addAttribute("article", article);
             model.addAttribute("title", article.getTitle());
+            log.info("Полученная статья: " + article);
             return "article/get-article";
         } catch (Exception e) {
             model.addAttribute("errorMes", "-Страницы " + id + " не существует.");
@@ -36,6 +37,7 @@ public class UIController {
     @Operation(summary = "Получение страницы создания статьи")
     public String createArticle(Model model) {
         try {
+            log.info("Открываем страницу создания...");
             return "article/create-article";
         } catch (Exception e) {
             model.addAttribute("errorMes", "-Ошибка при получении страницы создания статьи.");
@@ -50,6 +52,7 @@ public class UIController {
             EditArticleDTO article = articleService.getToEditArticle(id);
             model.addAttribute("article", article);
             model.addAttribute("title", article.getTitle());
+            log.info("Получение версии статьи до редактирования...");
             return "article/edit-article";
         } catch (Exception e) {
             model.addAttribute("errorMes", "-Страницы " + id + " не существует.");

@@ -18,4 +18,17 @@ public class CreateArticleDTO {
     String author;
     String label;
     MultipartFile multipartFile;
+
+    @Override
+    public String toString() {
+        return "CreateArticleDTO{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", text='" + text + '\'' +
+                ", author='" + author + '\'' +
+                ", label='" + label + '\'' +
+                ", multipartFile=" + multipartFile +
+                '}';
+    }
 }

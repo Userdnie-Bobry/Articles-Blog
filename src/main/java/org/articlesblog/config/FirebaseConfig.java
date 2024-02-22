@@ -5,10 +5,12 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 
+@Slf4j
 @Getter
 public class FirebaseConfig {
     private static final String FILE_NAME = "articles-b1def-firebase-adminsdk-e85q5-51852b2062.json";
@@ -16,7 +18,9 @@ public class FirebaseConfig {
     private Storage storage;
 
     public FirebaseConfig() throws IOException {
+        log.info("Инициализацие Firebase...");
         init();
+        log.info("Firebase инициализировался.");
     }
 
     @PostConstruct

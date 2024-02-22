@@ -17,4 +17,18 @@ public class EditArticleDTO {
     String author;
     String label;
     String image;
+
+    @Override
+    public String toString() {
+        return "EditArticleDTO{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", text='" + text + '\'' +
+                ", author='" + author + '\'' +
+                ", label='" + label + '\'' +
+                ", image='" + image + '\'' +
+                '}';
+    }
+
 }

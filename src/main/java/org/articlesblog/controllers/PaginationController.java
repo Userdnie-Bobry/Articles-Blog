@@ -31,6 +31,7 @@ public class PaginationController {
 
         model.addAttribute("searched", false);
         searched = false;
+        log.info("Выводим страницу статей...");
         return getPages(id, model, articles, false);
     }
 

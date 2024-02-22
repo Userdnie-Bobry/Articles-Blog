@@ -18,4 +18,18 @@ public class GetArticleDTO {
     String dateCreate;
     String dateChange;
     String image;
+
+    @Override
+    public String toString() {
+        return "GetArticleDTO{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", text='" + text + '\'' +
+                ", author='" + author + '\'' +
+                ", label='" + label + '\'' +
+                ", dateCreate='" + dateCreate + '\'' +
+                ", dateChange='" + dateChange + '\'' +
+                ", image='" + image + '\'' +
+                '}';
+    }
 }
