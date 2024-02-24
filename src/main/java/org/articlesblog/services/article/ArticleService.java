@@ -11,4 +11,5 @@ public interface ArticleService {
     EditArticleDTO createArticle(CreateArticleDTO articleDTO);
     EditArticleDTO editArticle(Integer id, CreateArticleDTO articleDTO);
     String deleteArticle(Integer id);
+    String markdownToHTML(String markdown);
 }

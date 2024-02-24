@@ -82,6 +82,7 @@ public class ArticleServiceImpl implements ArticleService{
         article.setDateChange(LocalDateTime.now());
 
         Article savedArticle = articleRepository.save(article);
+
         return new EditArticleDTO(savedArticle.getId(), savedArticle.getTitle(), savedArticle.getDescription(), savedArticle.getText(),
                 savedArticle.getAuthor(), article.getLabel(), article.getImage());
     }
@@ -129,7 +130,8 @@ public class ArticleServiceImpl implements ArticleService{
         }).orElse("Статья не найдена");
     }
 
-    private String markdownToHTML(String markdown) {
+    @Override
+    public String markdownToHTML(String markdown) {
         Parser parser = Parser.builder()
                 .build();
 
