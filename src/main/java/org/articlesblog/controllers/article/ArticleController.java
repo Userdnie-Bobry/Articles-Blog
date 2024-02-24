@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class ArticleController {
     private final ArticleService articleService;
+
     @PostMapping("/articles/new")
     //User
     @Operation(summary = "Создание новой статьи")
     public ResponseEntity<EditArticleDTO> createArticle(@ModelAttribute CreateArticleDTO articleDTO) {
         EditArticleDTO createdArticle = articleService.createArticle(articleDTO);
+        log.info("Созданная статья: " + createdArticle);
         return ResponseEntity.ok(createdArticle);
     }
 
@@ -29,6 +31,7 @@ public class ArticleController {
     @Operation(summary = "Обновление данных статьи по id")
     public ResponseEntity<EditArticleDTO> updateArticle(@PathVariable Integer id, @ModelAttribute CreateArticleDTO articleDTO) {
         EditArticleDTO updatedArticle = articleService.editArticle(id, articleDTO);
+        log.info("Обновленная статья: " + updatedArticle);
         return ResponseEntity.ok(updatedArticle);
     }
 
@@ -37,6 +40,7 @@ public class ArticleController {
     @Operation(summary = "Удаление статьи по id")
     public ResponseEntity<String> deleteArticle(@PathVariable Integer id) {
         String deletedArticle = articleService.deleteArticle(id);
+        log.info(deletedArticle);
         return ResponseEntity.ok(deletedArticle);
     }
 }

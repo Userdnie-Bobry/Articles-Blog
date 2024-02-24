@@ -1,6 +1,7 @@
 package org.articlesblog.services.article;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.articlesblog.dto.articledto.*;
 import org.articlesblog.jpa.entity.Article;
 import org.articlesblog.jpa.repository.ArticleRepository;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ArticleServiceImpl implements ArticleService{
@@ -80,6 +82,7 @@ public class ArticleServiceImpl implements ArticleService{
         article.setDateChange(LocalDateTime.now());
 
         Article savedArticle = articleRepository.save(article);
+
         return new EditArticleDTO(savedArticle.getId(), savedArticle.getTitle(), savedArticle.getDescription(), savedArticle.getText(),
                 savedArticle.getAuthor(), article.getLabel(), article.getImage());
     }
@@ -127,14 +130,15 @@ public class ArticleServiceImpl implements ArticleService{
         }).orElse("Статья не найдена");
     }
 
-    private String markdownToHTML(String markdown) {
+    @Override
+    public String markdownToHTML(String markdown) {
         Parser parser = Parser.builder()
                 .build();
 
         Node document = parser.parse(markdown);
         HtmlRenderer renderer = HtmlRenderer.builder()
                 .build();
-
+        log.info("Преобразуем markdownToHTML");
         return renderer.render(document);
     }
 }

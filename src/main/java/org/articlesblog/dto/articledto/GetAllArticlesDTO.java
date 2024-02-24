@@ -17,4 +17,16 @@ public class GetAllArticlesDTO {
     String description;
     String dateCreate;
     String image;
+
+    @Override
+    public String toString() {
+        return "Статья: " +
+                "id=" + id +
+                ", label='" + label + '\'' +
+                ", author='" + author + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", dateCreate='" + dateCreate + '\'' +
+                ", image='" + image + '\'';
+    }
 }

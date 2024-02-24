@@ -31,6 +31,7 @@ public class PaginationController {
 
         model.addAttribute("searched", false);
         searched = false;
+        log.info("Выводим страницу " + id + ": ");
         return getPages(id, model, articles, false);
     }
 
@@ -86,10 +87,9 @@ public class PaginationController {
         model.addAttribute("searched", true);
         searched = true;
 
-        if (articles.isEmpty()){
+        if (articles.isEmpty()) {
             return "articles";
-        }
-        else {
+        } else {
             model.addAttribute("articles", articles);
             return getPages(id, model, articles, searched);
         }
@@ -101,14 +101,12 @@ public class PaginationController {
         int startIndex = (id - 1) * pageSize;
         int endIndex = Math.min(startIndex + pageSize, articles.size());
 
-        if(articles.isEmpty()){
+        if (articles.isEmpty()) {
             return "articles";
-        }
-        else if (id > totalPages) {
+        } else if (id > totalPages) {
             model.addAttribute("errorMes", "-Максимальная страница: " + totalPages);
             return "error";
-        }
-        else if (id < 1){
+        } else if (id < 1) {
             model.addAttribute("errorMes", "-Минимальная страница: 1");
             return "error";
         }
@@ -119,7 +117,11 @@ public class PaginationController {
             articlesOnPage.add(articles.get(i));
         }
 
-        if (!searched){
+        for (GetAllArticlesDTO article : articlesOnPage) {
+            log.info("" + article);
+        }
+
+        if (!searched) {
             Collections.reverse(articlesOnPage);
         }
 

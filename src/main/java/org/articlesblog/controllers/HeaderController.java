@@ -25,6 +25,7 @@ public class HeaderController {
     @Operation(summary = "О нас")
     public String about(Model model) {
         model.addAttribute("title", "О нас");
+        log.info("Открыли страницу \"О нас\"");
         return "about";
     }
 }
