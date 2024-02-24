@@ -75,7 +75,7 @@ public class SecurityConfig {
     OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler(ClientRegistrationRepository clientRegistrationRepository) {
         OidcClientInitiatedLogoutSuccessHandler successHandler =
                 new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
-        successHandler.setPostLogoutRedirectUri(URI.create("http://localhost:8080").toString());
+        successHandler.setPostLogoutRedirectUri(URI.create("http://keycloak:8080").toString());
         return successHandler;
     }
 

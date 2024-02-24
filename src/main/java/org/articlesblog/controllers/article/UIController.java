@@ -31,6 +31,7 @@ public class UIController {
             return "article/get-article";
         } catch (Exception e) {
             model.addAttribute("errorMes", "-Страницы " + id + " не существует.");
+            log.error(e.getMessage());
             return "error";
         }
     }
@@ -43,6 +44,7 @@ public class UIController {
             return "article/create-article";
         } catch (Exception e) {
             model.addAttribute("errorMes", "-Ошибка при получении страницы создания статьи.");
+            log.error(e.getMessage());
             return "error";
         }
     }
@@ -58,6 +60,7 @@ public class UIController {
             return "article/edit-article";
         } catch (Exception e) {
             model.addAttribute("errorMes", "-Страницы " + id + " не существует.");
+            log.error(e.getMessage());
             return "error";
         }
     }

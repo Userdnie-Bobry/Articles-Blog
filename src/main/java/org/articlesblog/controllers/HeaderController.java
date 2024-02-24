@@ -18,7 +18,7 @@ public class HeaderController {
     @Operation(summary = "Страница входа")
     public String auth(Model model) {
         model.addAttribute("title", "Авторизация");
-        return "auth";
+        return "article/create-article";
     }
 
     @GetMapping("/about")
