@@ -1,15 +1,31 @@
 version: '3'
 services:
-  app:
-    image: articles
-    build: .
+
+  postgres:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloakdb
+      POSTGRES_USER: keycloakuser
+      POSTGRES_PASSWORD: keycloakpass
+
+  keycloak:
+    image: jboss/keycloak:16.1.1
     ports:
       - "8080:8080"
-    volumes:
-      - /src/main/resources/certificates
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: keycloakdb
+      DB_SCHEMA: public
+      DB_USER: keycloakuser
+      DB_PASSWORD: keycloakpass
+    depends_on:
+      - postgres
 
   database:
-    image: 'postgres:15.5'
+    image: postgres
     ports:
       - '5432:5432'
     environment:
@@ -18,3 +34,21 @@ services:
       - POSTGRES_PASSWORD=root
     volumes:
       - /var/lib/postgresql/data:/var/lib/postgresql/data
+
+  app:
+    image: articles
+    build: .
+    ports:
+      - "8081:8080"
+    volumes:
+      - /src/main/resources/certificates
+
+networks:
+  app-network:
+     driver: bridge
+  keycloak-network:
+    driver: bridge
+volumes:
+  postgres_data:
+    driver: local
+
