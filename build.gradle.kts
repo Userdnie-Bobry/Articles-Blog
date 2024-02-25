@@ -40,6 +40,11 @@ dependencies {
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	//implementation("org.springframework.security:spring-security-oauth2-core:6.2.0")
+	implementation ("org.keycloak:keycloak-admin-client:23.0.7")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 }
 
 tasks.withType<Test> {
