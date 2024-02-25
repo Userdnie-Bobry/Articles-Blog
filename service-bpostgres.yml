@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: default
+  name: bpostgres-v1
+  labels:
+    app-label: bpostgres-v1
+spec:
+  ports:
+    - port: 5432
+      name: plaintext
+      targetPort: 5432
+  selector:
+    app-label: bpostgres-v1
+  type: LoadBalancer
