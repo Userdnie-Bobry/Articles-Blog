@@ -14,13 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class HeaderController {
 
-    @GetMapping("/auth")
-    @Operation(summary = "Страница входа")
-    public String auth(Model model) {
-        model.addAttribute("title", "Авторизация");
-        return "auth";
-    }
-
     @GetMapping("/about")
     @Operation(summary = "О нас")
     public String about(Model model) {

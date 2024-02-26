@@ -36,7 +36,7 @@ public class FirebaseStorageServiceImpl implements FirebaseStorageService {
     public String uploadImage(MultipartFile file) {
         try {
             if (!file.isEmpty()) {
-                String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
+                String fileName = UUID.randomUUID() + "-" + Objects.requireNonNull(file.getOriginalFilename()).replaceAll("\\s+", "");
                 Path path = Paths.get(fileName);
                 Files.copy(file.getInputStream(), path);
 
